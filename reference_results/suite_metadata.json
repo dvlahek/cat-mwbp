@@ -1,0 +1,170 @@
+{
+  "generated_utc": "2026-08-10T11:20:46Z",
+  "config_hash": "7066c96c3bd2a8c7",
+  "config": {
+    "profile": "full",
+    "max_epochs": 150,
+    "patience": 20,
+    "min_delta": 0.0001,
+    "batch_size": 64,
+    "core_seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "scaling_seeds": [
+      0,
+      1,
+      2
+    ],
+    "include_scaling": true,
+    "learning_rate": 0.045,
+    "momentum": 0.9,
+    "adjoint_dt": 0.04,
+    "adjoint_damping": 8.0,
+    "adjoint_frequency": 8.0,
+    "ar_steps": 64,
+    "ar_relaxation_rate": 0.16,
+    "calibration_batches": 8,
+    "calibration_iterations": 12,
+    "accuracy_equivalence_margin": 0.005,
+    "loss_equivalence_margin": 0.001,
+    "hierarchical_bootstrap_draws": 10000,
+    "methods": [
+      "BP-Momentum",
+      "BP-Adam",
+      "BP-MWBP",
+      "FA-Momentum",
+      "DFA-Momentum",
+      "LocalHead-Momentum",
+      "AR64-Momentum",
+      "CAT40-Momentum",
+      "CAT64-Momentum",
+      "CAT64-MWBP",
+      "CAT64-MWBP-local",
+      "CAT64-MWBP-local-EM"
+    ],
+    "core_datasets": [
+      "moons",
+      "circles",
+      "iris",
+      "wine",
+      "breast_cancer",
+      "anisotropic",
+      "digits"
+    ],
+    "scaling_methods": [
+      "BP-Momentum",
+      "DFA-Momentum",
+      "LocalHead-Momentum",
+      "AR64-Momentum",
+      "CAT64-Momentum",
+      "CAT64-MWBP",
+      "CAT64-MWBP-local-EM"
+    ],
+    "architectures": {
+      "moons": [
+        2,
+        32,
+        32,
+        24,
+        16,
+        8,
+        2
+      ],
+      "circles": [
+        2,
+        32,
+        32,
+        24,
+        16,
+        8,
+        2
+      ],
+      "iris": [
+        4,
+        32,
+        32,
+        24,
+        16,
+        8,
+        3
+      ],
+      "wine": [
+        13,
+        40,
+        40,
+        32,
+        24,
+        12,
+        3
+      ],
+      "breast_cancer": [
+        30,
+        48,
+        48,
+        32,
+        24,
+        12,
+        2
+      ],
+      "anisotropic": [
+        20,
+        48,
+        48,
+        32,
+        24,
+        16,
+        2
+      ],
+      "digits": [
+        64,
+        64,
+        64,
+        48,
+        32,
+        16,
+        10
+      ],
+      "synthetic_large": [
+        100,
+        128,
+        128,
+        96,
+        64,
+        32,
+        10
+      ]
+    },
+    "split": {
+      "train": 0.6,
+      "validation": 0.15,
+      "test": 0.25,
+      "scaler_fit": "train_only"
+    },
+    "overdamped_analysis": {
+      "derived_rate": 0.16,
+      "ar_rate_predeclared": 0.16,
+      "comparison_budget": "equal synchronous local sweeps and equal one-hop Jacobian actions"
+    }
+  },
+  "expected_runs": 861,
+  "unit_tests": "passed",
+  "git_commit": "56c6294aa187b3d6a69ba34bdc2d93fb310bb4de",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.13.7 (tags/v3.13.7:bcee1c3, Aug 14 2025, 14:15:11) [MSC v.1944 64 bit (AMD64)]",
+  "packages": {
+    "numpy": "2.3.5",
+    "scipy": "1.16.3",
+    "pandas": "2.3.3",
+    "matplotlib": "3.10.7",
+    "scikit_learn": "1.7.2"
+  }
+}

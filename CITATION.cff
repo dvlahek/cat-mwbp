@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this research prototype, cite the accompanying manuscript."
+title: "Causal Adjoint Transport with Metric-Wave Backpropagation: Research Artifact"
+type: software
+authors:
+  - family-names: Vlahek
+    given-names: Dino
+    orcid: "https://orcid.org/0000-0002-3911-8685"
+version: 5.1.0
+date-released: 2026-08-10
+license: MIT

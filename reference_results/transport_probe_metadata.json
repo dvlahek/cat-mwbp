@@ -1,0 +1,31 @@
+{
+  "config": {
+    "profile": "full",
+    "datasets": [
+      "moons",
+      "digits"
+    ],
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "epochs": 40,
+    "patience": 12,
+    "batch_size": 64,
+    "metric_batch": 8,
+    "learning_rate": 0.045,
+    "momentum": 0.9
+  },
+  "config_sha256": "c8f55d35e36e247354bb91492e0ee2da2c49b9487ec094a52d808f90bee55f02",
+  "python": "3.13.7 (tags/v3.13.7:bcee1c3, Aug 14 2025, 14:15:11) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "vision_datasets_executed": false,
+  "interpretation": {
+    "partial_3hop": "partial support; not an all-block transport result",
+    "full_reach": "minimum graph-diameter support at every block",
+    "coherent_gauge": "uses explicit Procrustes edge transports R H R^T"
+  }
+}
