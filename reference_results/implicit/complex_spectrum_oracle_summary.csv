@@ -1,0 +1,7 @@
+operator,parameterization,root_factor,converged,cases,median_actions,min_actions,max_actions
+translation_invariant_normal,real_interval,1.029909,0,20,,,
+translation_invariant_normal,oracle_ellipse,0.878155,20,20,106,104,107
+translation_invariant_normal,exact_spectrum,0.877568,20,20,106,105,106
+heterogeneous_non_normal,real_interval,0.973183-1.024838,8,20,,,
+heterogeneous_non_normal,oracle_ellipse,0.867441-0.881560,20,20,106.5,95,109
+heterogeneous_non_normal,exact_spectrum,0.867245-0.881169,20,20,104,96,109
