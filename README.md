@@ -2,46 +2,47 @@
 
 Reference implementation for **Causal Adjoint Transport (CAT)** and the accompanying Metric-Wave Backpropagation (MWBP) experiments.
 
-CAT replaces a centrally assembled hidden-layer backward pass with a local adjoint field. In feed-forward networks the field converges to the exact backpropagation gradient, but the second-order dynamics do not improve training over a matched first-order Activation Relaxation (AR) rule at the tested budgets. MWBP adds a low-rank propagating metric state. The main feed-forward experiments show that this metric changes internally while leaving the final predictions essentially unchanged.
-
-The repository also contains the implicit/recurrent extension. In that setting the adjoint is the solution of
+CAT represents backward credit by a local adjoint state. In feed-forward networks this state converges to the exact backpropagation gradient, but the tested second-order dynamics do not improve training over matched first-order Activation Relaxation (AR). In implicit and recurrent networks the backward problem instead requires the iterative solution of
 
 \[
-(I-J^T)\lambda=b,
+(I-J^T)\lambda=b.
 \]
 
-so credit assignment is a genuine iterative local solve. This is the regime in which CAT's second-order dynamics become useful. The spectral experiments compare CAT with optimally relaxed first-order AR and Chebyshev semi-iteration. The classification experiments use the same datasets already present in the feed-forward study and count the actual sparse local \(J^T v\) actions used during training.
+This is the setting in which the second-order CAT state becomes useful. The main comparisons count actual local \(J^T v\) actions and distinguish this fixed-memory local setting from general Krylov and quasi-Newton solvers.
 
 **Version 1.0.0** is the reference version for the manuscript.
 
 ## Repository layout
 
-- `src/metric_wave/` — core NumPy implementation used by the original CAT-MWBP study.
-- `experiments/run_journal_suite.py` — feed-forward benchmark and statistical analysis.
-- `experiments/run_transport_probes.py` — finite-hop output-factor and Procrustes transport probes.
-- `experiments/run_optional_vision_probe.py` — original MNIST/CIFAR-10 metric-transport probe.
-- `experiments/run_implicit_spectral_suite.py` — implicit/recurrent spectral benchmark with ordinary and asymmetric local grids, AR, CAT, and Chebyshev controls.
-- `experiments/run_implicit_dataset_suite.py` — implicit classification benchmark on the core datasets, `synthetic_large`, MNIST, and CIFAR-10.
-- `reference_results/` — compact reference summaries from the reported runs.
-- `tests/` — numerical checks for the local credit and metric implementations.
+- `src/metric_wave/` contains the NumPy implementation used by the feed-forward experiments.
+- `experiments/run_journal_suite.py` runs the main feed-forward benchmark.
+- `experiments/run_transport_probes.py` runs the metric-transport controls.
+- `experiments/run_optional_vision_probe.py` contains the original MNIST/CIFAR-10 transport probe.
+- `experiments/run_implicit_spectral_suite.py` runs the implicit spectral benchmark.
+- `experiments/run_implicit_dataset_suite.py` runs the fixed-recurrent classification benchmark.
+- `experiments/run_nonlocal_solver_reference.py` compares AR, CAT, GMRES, good Broyden, and tuned Anderson at a common exact-error target.
+- `experiments/run_trainable_recurrent_control.py` trains the local recurrent edge weights on three classification datasets.
+- `experiments/run_directed_spectrum_control.py` tests directed complex-spectrum recurrent operators outside the main real-spectrum theory.
+- `reference_results/` contains compact summaries of the reported runs.
+- `tests/` contains numerical checks for the local credit and metric implementations.
 
 ## Installation
 
-The experiments use Python, NumPy, SciPy, pandas, scikit-learn, and matplotlib. A clean environment is recommended.
+```bash
+python -m venv .venv
+```
 
-### Windows
+On Windows:
 
 ```bat
-python -m venv .venv
 .venv\Scripts\activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-### Linux or macOS
+On Linux or macOS:
 
 ```bash
-python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
@@ -53,7 +54,7 @@ Run the tests with:
 python -m unittest discover -s tests -v
 ```
 
-## Feed-forward CAT-MWBP study
+## Feed-forward study
 
 A short check is:
 
@@ -62,64 +63,65 @@ python run_npl_suite.py --profile quick --jobs 2 --output results/quick
 python experiments/run_transport_probes.py --profile quick --output results/transport_quick
 ```
 
-The full non-vision study is:
+The main non-vision suite contains 861 completed runs. CAT64 is practically equivalent to BP-Momentum under the predeclared accuracy and loss margins. At the same local sweep budget, CAT64 does not improve training over AR64. The propagating MWBP metric is also indistinguishable from the non-propagating and energy-matched controls in predictive performance.
+
+## Implicit spectral study
 
 ```bash
-python run_npl_suite.py --profile full --jobs 4 --output results/full
-python experiments/run_transport_probes.py --profile full --output results/transport_full
+python experiments/run_implicit_spectral_suite.py --profile standard --output results/implicit_spectral
 ```
 
-The main suite contains 861 completed runs. CAT64 is practically equivalent to BP-Momentum under the predeclared accuracy and loss margins. At the same local sweep budget, CAT64 does not improve training over AR64. The propagating MWBP metric is also indistinguishable from the non-propagating and energy-matched controls in predictive performance.
+The benchmark uses periodic local 2-D recurrent graphs. One is an ordinary square grid. The other adds a symmetric diagonal pair, which removes the bipartite spectral symmetry while keeping the recurrent matrix symmetric. Each solver iteration performs one local \(J^T v\) action.
 
-## Implicit/recurrent spectral study
+At relative adjoint or implicit-gradient error \(10^{-6}\), the standard run gives a CAT-bound/AR-oracle speedup of 8.83x on the non-bipartite linear graph at \(\rho=0.99\). The nonlinear tanh speedup is smaller because saturation reduces the actual recurrent Jacobian radius. CAT-oracle remains close to the Chebyshev reference.
 
-The standard spectral run is:
+## Fixed-recurrent classification
 
 ```bash
-python experiments/run_implicit_spectral_suite.py \
-  --profile standard \
-  --output results/implicit_spectral
+python experiments/run_implicit_dataset_suite.py --profile standard --group core --output results/implicit_core
 ```
 
-The benchmark uses periodic local 2-D recurrent graphs, including a non-bipartite asymmetric graph. Each solver iteration performs one local \(J^T v\) action. The standard run compares first-order AR, second-order CAT, and Chebyshev semi-iteration over recurrent spectral radii from 0.50 to 0.99.
+The recurrent operator is a sparse degree-four local ring. Across the eight core/scaling datasets and three seeds, CAT uses fewer local adjoint actions in all 24 paired runs. The median AR/CAT action ratio is 2.67x and paired test accuracy is unchanged. MNIST gives a 1.77x reduction with the same accuracy. CIFAR-10 is retained only as a high-dimensional solver probe.
 
-At a relative implicit-gradient error of \(10^{-6}\), the standard reference run gives a CAT-bound/AR-oracle speedup of 8.83x for the asymmetric linear graph at \(\rho=0.99\). In the nonlinear tanh problem, the corresponding speedups are 3.28x at \(\rho=0.95\), 3.82x at \(\rho=0.98\), and 3.34x at \(\rho=0.99\). CAT-oracle remains within a few percent of the Chebyshev control.
-
-## Implicit classification on the manuscript datasets
-
-Run the core and scaling datasets with:
+## Trainable recurrent control
 
 ```bash
-python experiments/run_implicit_dataset_suite.py \
-  --profile standard \
-  --group core \
-  --output results/implicit_core
+python experiments/run_trainable_recurrent_control.py --profile standard --output results/trainable_recurrent
 ```
 
-Run the real-image probes with:
+The degree-four recurrent edge weights are trained jointly with the classifier on `moons`, `circles`, and `breast_cancer`, using 20 seeds for each dataset. CAT uses fewer local \(J^T v\) actions in all 60 paired runs. The pooled median AR/CAT action ratio is 2.13x with a 95% bootstrap interval of [1.96, 2.30]. Paired test accuracy is unchanged.
+
+## General solver reference
 
 ```bash
-python experiments/run_implicit_dataset_suite.py \
-  --profile standard \
-  --group vision \
-  --output results/implicit_vision
+python experiments/run_nonlocal_solver_reference.py --output results/nonlocal_solver_reference
 ```
 
-The recurrent operator is a fixed sparse local ring. Each hidden unit communicates with four neighbours, at offsets \(\pm1\) and \(\pm2\). AR and CAT use the same recurrent graph, initialization, minibatch order, stopping tolerance, and spectral envelope. The reported solver count is the actual number of sparse local \(J^T v\) calls.
+All methods are evaluated at the same exact target of \(10^{-6}\). The linear problems use relative adjoint error. The tanh problems use relative implicit-gradient error. GMRES uses full Arnoldi, good Broyden uses a tuned full inverse update, and Anderson is tuned over memory, mixing, and least-squares regularization.
 
-Across the eight core/scaling datasets and three seeds, CAT uses fewer local adjoint actions in all 24 paired runs, with a median speedup of 2.67x and no change in test accuracy. The MNIST and CIFAR-10 runs add six paired comparisons. CAT is faster in all six, with mean dataset-level speedups of 1.77x on MNIST and 1.40x on CIFAR-10, again with unchanged test accuracy.
+Only \(J^T v\) actions are counted. GMRES inner products and orthogonalization, Broyden dense inverse updates, and Anderson history and least-squares work are not charged. GMRES and good Broyden therefore require fewer Jacobian actions than CAT on these controlled systems. CAT is not presented as a lower-action replacement for such general solvers. Its comparison of interest is the fixed-memory local one against matched first-order AR.
 
-The image models are controlled implicit-gradient probes, not competitive vision architectures. Their role is to test solver cost at fixed predictive behaviour.
+## Directed-spectrum scope control
+
+```bash
+python experiments/run_directed_spectrum_control.py --profile standard --output results/directed_spectrum
+```
+
+The directed experiment uses a translation-invariant nonsymmetric operator with complex spectrum and a heterogeneous non-normal local operator. AR and CAT retain the real-interval coefficients used in the symmetric study.
+
+At \(\rho=0.80\), CAT converges in all 20 directed cases and the pooled median AR/CAT action ratio is 1.42x. At \(\rho=0.95\), CAT converges in 4 of 20 cases. At \(\rho=0.99\), it converges in none of the 20 cases, while AR converges throughout. This result defines the scope of the present real-spectrum CAT parameterization. It is not an acceleration claim for arbitrary complex-spectrum or non-normal Jacobians.
 
 ## Reference results
 
-Compact summaries of the standard implicit runs are in `reference_results/implicit/`. Full run-level files, solver audits, figures, and checkpoints are regenerated by the scripts and are intentionally not stored in the repository.
+Compact summaries are stored in `reference_results/implicit/`. Full run-level files, audits, figures, and checkpoints are regenerated by the experiment scripts and are not committed to the repository.
 
 ## Scope
 
-The feed-forward and implicit results should be read together. CAT does not provide a general optimizer advantage on ordinary feed-forward networks. Its advantage appears when the adjoint itself is an iterative implicit/recurrent solve, especially as the recurrent Jacobian approaches the critical regime. The heavy-ball and Chebyshev acceleration formulas used in the spectral analysis are classical. The contribution is the identification and validation of this regime for local CAT credit dynamics.
+The feed-forward and implicit results should be read together. CAT does not provide a general optimizer advantage on ordinary feed-forward networks. Its useful regime appears when the adjoint itself is an iterative implicit or recurrent solve and the recurrent Jacobian lies in the real-spectrum setting used by the spectral analysis.
 
-MWBP remains a bounded negative result in the present low-rank output-sourced setting. The code keeps those experiments because they establish where propagating update geometry does and does not affect learning.
+The heavy-ball and Chebyshev formulas are classical. The contribution is not a new linear-solver theorem. It is the formulation and validation of a fixed-memory local credit dynamics, together with the identification of the regime in which its second-order state reduces neighbouring Jacobian actions relative to matched first-order relaxation.
+
+MWBP remains a bounded negative result in the low-rank output-sourced setting studied here.
 
 ## Citation and license
 
