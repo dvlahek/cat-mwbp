@@ -3,6 +3,7 @@
 These CSV files are compact summaries of the standard runs reported with the manuscript.
 
 - `spectral_asymmetry_audit.csv` records the spectral intervals and AR step sizes for the ordinary and non-bipartite symmetric 2-D recurrent graphs. The historical file name is retained for compatibility with the original run output.
+- `chebyshev_bound_summary.csv` records the CAT/Chebyshev oracle and conservative-bound action counts on the non-bipartite standard conditions. The bound-to-bound ratios show no systematic robustness advantage for either second-order method.
 - `core_dataset_summary.csv` contains the eight fixed-operator core/scaling classification summaries over three seeds.
 - `vision_dataset_summary.csv` contains the MNIST and CIFAR-10 solver-probe summaries over three seeds.
 - `trainable_recurrent_summary.csv` contains the 20-seed trainable recurrent control on moons, circles, and breast cancer.
