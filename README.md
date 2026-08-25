@@ -8,7 +8,9 @@ CAT represents backward credit by a local adjoint state. In feed-forward network
 (I-J^T)\lambda=b.
 \]
 
-This is the setting in which the second-order CAT state becomes useful. The main comparisons count actual local \(J^T v\) actions and distinguish this fixed-memory local setting from general Krylov and quasi-Newton solvers.
+This is the setting in which the second-order CAT state becomes useful. Relative to AR, CAT stores one additional local adjoint vector, uses the same neighbouring \(J^T v\) action, and requires no growing solver history. Its measured advantage in the real-spectrum near-critical regime is a substantial reduction in the number of local actions needed for the same exact gradient.
+
+The intended computation model is relevant to reciprocal physical learning systems. In such substrates, neighbouring interactions can be implemented by the physical couplings themselves and reciprocal stiffness or coupling operators are naturally symmetric. Global Krylov inner products, dense quasi-Newton state, or Anderson least-squares reductions require additional readout and aggregation. The repository therefore distinguishes the fixed-memory local CAT/AR comparison from general solver references.
 
 **Version 1.0.0** is the reference version for the manuscript.
 
@@ -73,7 +75,7 @@ python experiments/run_implicit_spectral_suite.py --profile standard --output re
 
 The benchmark uses periodic local 2-D recurrent graphs. One is an ordinary square grid. The other adds a symmetric diagonal pair, which removes the bipartite spectral symmetry while keeping the recurrent matrix symmetric. Each solver iteration performs one local \(J^T v\) action.
 
-At relative adjoint or implicit-gradient error \(10^{-6}\), the standard run gives a CAT-bound/AR-oracle speedup of 8.83x on the non-bipartite linear graph at \(\rho=0.99\). The nonlinear tanh speedup is smaller because saturation reduces the actual recurrent Jacobian radius. CAT-oracle remains close to the Chebyshev reference.
+At relative adjoint or implicit-gradient error \(10^{-6}\), the conservative comparison gives a CAT-bound/AR-oracle speedup of 8.83x on the non-bipartite linear graph at \(\rho=0.99\). When both local methods receive the exact spectral interval, the corresponding AR-oracle/CAT-oracle ratio is 10.13x. The 11.74x value reported for the ordinary grid is a separate CAT-bound/AR-oracle control. CAT-oracle remains close to the Chebyshev reference.
 
 ## Fixed-recurrent classification
 
@@ -107,9 +109,9 @@ Only \(J^T v\) actions are counted. GMRES inner products and orthogonalization, 
 python experiments/run_directed_spectrum_control.py --profile standard --output results/directed_spectrum
 ```
 
-The directed experiment uses a translation-invariant nonsymmetric operator with complex spectrum and a heterogeneous non-normal local operator. AR and CAT retain the real-interval coefficients used in the symmetric study.
+The directed experiment uses a translation-invariant nonsymmetric operator with complex spectrum and a heterogeneous non-normal local operator. AR and CAT intentionally retain the real-interval coefficients used in the symmetric study.
 
-At \(\rho=0.80\), CAT converges in all 20 directed cases and the pooled median AR/CAT action ratio is 1.42x. At \(\rho=0.95\), CAT converges in 4 of 20 cases. At \(\rho=0.99\), it converges in none of the 20 cases, while AR converges throughout. This result defines the scope of the present real-spectrum CAT parameterization. It is not an acceleration claim for arbitrary complex-spectrum or non-normal Jacobians.
+At \(\rho=0.80\), CAT converges in all 20 directed cases and the pooled median AR/CAT action ratio is 1.42x. At \(\rho=0.95\), CAT converges in 4 of 20 cases. At \(\rho=0.99\), it converges in none of the 20 cases, while AR converges throughout. This result defines the scope of the present real-interval CAT parameterization. Classical nonsymmetric Chebyshev and second-degree stationary methods can instead use complex spectral enclosures. The experiment does not claim that second-order acceleration is impossible for complex-spectrum systems.
 
 ## Reference results
 
@@ -117,7 +119,9 @@ Compact summaries are stored in `reference_results/implicit/`. Full run-level fi
 
 ## Scope
 
-The feed-forward and implicit results should be read together. CAT does not provide a general optimizer advantage on ordinary feed-forward networks. Its useful regime appears when the adjoint itself is an iterative implicit or recurrent solve and the recurrent Jacobian lies in the real-spectrum setting used by the spectral analysis.
+The central positive result concerns fixed-memory local implicit credit. In reciprocal or symmetrizable near-critical systems, CAT adds one local adjoint vector relative to AR and substantially reduces the number of neighbouring Jacobian actions needed for the same exact gradient. The fixed-recurrent experiments favor CAT in all 24 core/scaling pairs and the trainable-recurrent control favors CAT in all 60 pairs without changing test accuracy.
+
+The feed-forward and general-solver controls define the boundaries of this advantage. CAT does not provide a general optimizer advantage on ordinary feed-forward networks, and it is not a replacement for GMRES or quasi-Newton methods when their global operations and larger solver state are available.
 
 The heavy-ball and Chebyshev formulas are classical. The contribution is not a new linear-solver theorem. It is the formulation and validation of a fixed-memory local credit dynamics, together with the identification of the regime in which its second-order state reduces neighbouring Jacobian actions relative to matched first-order relaxation.
 
