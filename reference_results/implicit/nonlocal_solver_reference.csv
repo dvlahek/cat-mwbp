@@ -1,0 +1,7 @@
+problem,rho,AR-oracle_median_actions,AR-oracle_convergence_rate,AR-oracle_max_target_error,CAT-oracle_median_actions,CAT-oracle_convergence_rate,CAT-oracle_max_target_error,GMRES_median_actions,GMRES_convergence_rate,GMRES_max_target_error,Anderson-best_median_actions,Anderson_memory,Anderson_mixing,Anderson_regularization,Anderson_convergence_rate,Broyden-good-best_median_actions,Broyden_inverse_scale,Broyden_damping,Broyden_convergence_rate
+linear,0.8,47.0,1.0,9.853456634588647e-07,20.0,1.0,9.556358543780103e-07,16.0,1.0,7.588686414571774e-07,49.0,5,1.0,1e-10,1.0,18.0,2.0,0.8,1.0
+linear,0.95,203.0,1.0,9.90458385922213e-07,45.0,1.0,9.901136553587504e-07,21.0,1.0,9.490096383116722e-07,23.0,20,1.0,1e-10,1.0,27.0,1.0,1.0,1.0
+linear,0.99,1033.0,1.0,9.992692841132558e-07,102.0,1.0,8.960136129812977e-07,23.0,1.0,9.78422960791284e-07,25.0,50,1.0,1e-10,1.0,33.0,1.5,1.0,1.0
+tanh,0.8,42.0,1.0,9.386351450083527e-07,19.0,1.0,8.339017658665844e-07,16.0,1.0,9.424266357937831e-07,50.0,3,1.0,1e-10,1.0,18.0,1.5,1.0,1.0
+tanh,0.95,160.0,1.0,9.689866175145418e-07,39.0,1.0,9.800197251404936e-07,24.0,1.0,8.661999621590458e-07,158.0,20,1.0,1e-10,1.0,29.0,1.5,1.0,1.0
+tanh,0.99,316.0,1.0,9.942773350932746e-07,55.0,1.0,9.47752268934018e-07,28.0,1.0,9.96417566946009e-07,189.0,20,1.0,1e-10,1.0,34.0,2.0,1.0,1.0
