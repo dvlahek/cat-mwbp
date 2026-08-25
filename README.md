@@ -24,8 +24,8 @@ The intended computation model is motivated by physical learning systems with lo
 - `experiments/run_implicit_dataset_suite.py` - fixed-recurrent classification benchmark.
 - `experiments/run_trainable_recurrent_control.py` - trainable recurrent-edge control.
 - `experiments/run_nonlocal_solver_reference.py` - exact-error AR, CAT, GMRES, good-Broyden, and tuned-Anderson comparison.
-- `experiments/run_directed_spectrum_control.py` - directed normal and non-normal complex-spectrum control.
-- `experiments/run_manteuffel_ellipse_oracle.py` - oracle elliptic spectral tuning for the directed CAT recurrence.
+- `experiments/run_directed_spectrum_control.py` - directed normal and non-normal complex-spectrum control with the original real-interval parameters.
+- `experiments/run_complex_spectrum_oracle.py` - oracle elliptic and exact-spectrum tuning for the directed normal and heterogeneous non-normal controls.
 - `reference_results/implicit/` - compact summaries of the reported standard runs.
 
 ## Installation
@@ -109,17 +109,19 @@ The first control keeps the real-interval coefficients used in the symmetric stu
 python experiments/run_directed_spectrum_control.py --profile standard --output results/directed_spectrum
 ```
 
-At \(\rho=0.80\), CAT converges in all 20 directed cases and the pooled median AR/CAT action ratio is 1.42. At \(\rho=0.95\), CAT converges in 4 of 20 cases, and at \(\rho=0.99\) it converges in none of the 20 cases while AR converges throughout.
+At \(\rho=0.80\), CAT converges in all 20 directed cases and the pooled median AR/CAT action ratio is 1.42. Near criticality, the same real-interval coefficients lose stability as the spectrum becomes complex.
 
-The oracle elliptic diagnostic then asks if this loss of stability is caused by the spectral parameterization:
+The oracle diagnostic tests the parameterization without changing the two-state CAT recurrence:
 
 ```bash
-python experiments/run_manteuffel_ellipse_oracle.py --output results/manteuffel_ellipse_oracle
+python experiments/run_complex_spectrum_oracle.py --output results/complex_spectrum_oracle
 ```
 
-For the translation-invariant directed linear operator at \(\rho=0.95\), the original real-interval CAT coefficients have a predicted worst characteristic-root modulus of 1.030 and fail in all 20 right-hand-side trials. Oracle elliptic tuning changes only the two CAT coefficients, reduces the predicted factor to 0.878, and restores exact-error convergence in all 20 trials. The median action count is 106. Direct optimization on the exact discrete spectrum gives the same median count.
+For the translation-invariant directed linear operator at \(\rho=0.95\), the real-interval coefficients have a predicted worst characteristic-root modulus of 1.030 and fail in all 20 right-hand-side trials. Oracle elliptic tuning reduces the factor to 0.878 and restores exact-error convergence in all 20 trials with median 106 local actions. Direct optimization on the exact discrete spectrum gives the same median count.
 
-This diagnostic shows that the directed-normal failure is a limitation of the real-interval parameterization rather than of the two-state CAT recurrence. The ellipse is oracle information. The code does not provide a local estimator of a complex spectral enclosure or a guarantee for general non-normal Jacobians.
+The same test is repeated on five heterogeneous non-normal local operators, with four right-hand sides for each operator. The normalized non-normality ranges from 0.058 to 0.070. Real-interval CAT converges in 8 of 20 trials. Oracle elliptic tuning reduces the predicted root factor to 0.867-0.882 and restores convergence in all 20 trials, with median 106.5 local actions. Exact-spectrum tuning also converges in all 20 trials with median 104.
+
+These diagnostics show that the near-critical directed failures in the tested operators are primarily parameterization failures rather than failures of the two-state recurrence. The spectral enclosures are oracle information. The code does not provide a local enclosure estimator or a guarantee for arbitrary strongly non-normal implicit Jacobians.
 
 ## Scope
 
