@@ -12,7 +12,7 @@ For a frozen implicit system, the two-state CAT recurrence is not a new numerica
 
 Relative to AR, CAT stores one additional local adjoint vector, uses the same neighbouring \(J^T v\) action, and requires no growing solver history. In reciprocal or symmetrizable near-critical systems this reduces the number of local actions needed for the same exact gradient.
 
-Chebyshev semi-iteration is the closest equal-locality numerical control. Once the spectral information is supplied, it also uses two vectors and local \(J^T v\) actions, and its action count is essentially the same as CAT in the spectral experiments. The difference considered here is that CAT uses fixed coefficients after calibration, while Chebyshev uses an iteration-dependent coefficient schedule. No action-count advantage over Chebyshev is claimed.
+Chebyshev semi-iteration is the closest equal-locality numerical control. Once the spectral information is supplied, it also uses two vectors and local \(J^T v\) actions, and its action count is essentially the same as CAT in the spectral experiments. CAT uses fixed coefficients after calibration, whereas Chebyshev follows an iteration-dependent coefficient schedule. A scheduled Chebyshev implementation therefore requires the participating units to share the same coefficient index, while CAT does not. This is a structural difference in the local update, not an action-count advantage over Chebyshev.
 
 The intended computation model is motivated by physical learning systems with local reciprocal couplings. Neighbouring interactions can be implemented directly by the substrate, while Krylov inner products, dense quasi-Newton state, or Anderson least-squares reductions require additional readout and aggregation. These examples motivate the operation model only. The repository does not claim a measured hardware speed, energy, or communication advantage.
 
@@ -30,7 +30,7 @@ The intended computation model is motivated by physical learning systems with lo
 - `experiments/run_nonlocal_solver_reference.py` - exact-error AR, CAT, GMRES, good-Broyden, and tuned-Anderson comparison.
 - `experiments/run_directed_spectrum_control.py` - directed normal and non-normal complex-spectrum control with the original real-interval parameters.
 - `experiments/run_complex_spectrum_oracle.py` - oracle elliptic and exact-spectrum tuning for the directed normal and heterogeneous non-normal controls.
-- `reference_results/implicit/` - compact summaries of the reported standard runs.
+- `reference_results/implicit/` - compact summaries of the reported standard runs and manuscript audits.
 
 ## Installation
 
@@ -87,7 +87,7 @@ Fixed recurrent operator:
 python experiments/run_implicit_dataset_suite.py --profile standard --group core --output results/implicit_core
 ```
 
-CAT uses fewer local adjoint actions in all 24 core/scaling pairs. The median AR/CAT action ratio is 2.67 and paired test accuracy is unchanged. MNIST gives a 1.77 ratio with the same accuracy. The image runs are solver stress tests rather than competitive vision benchmarks.
+CAT uses fewer local adjoint actions in all 24 core/scaling pairs. The median AR/CAT action ratio is 2.67 and paired test accuracy is unchanged. Across the eight dataset-level summaries, the median recurrent Jacobian radius and oracle AR/CAT action ratio are perfectly rank ordered. More strongly, the action reduction follows the asymptotic second-degree prediction computed from the exact sample-specific spectral intervals: the eight dataset-level theoretical and measured oracle ratios have Pearson correlation 0.997. The measured ratio is approximately 0.81-0.84 of the asymptotic prediction across all eight datasets. MNIST gives a 1.77 ratio with the same accuracy.
 
 Trainable recurrent operator:
 
@@ -129,7 +129,7 @@ These diagnostics show that the near-critical directed failures in the tested op
 
 ## Scope
 
-The central positive result concerns fixed-memory local implicit credit. CAT adds one local adjoint vector relative to AR and can substantially reduce the number of neighbouring Jacobian actions required near criticality without changing the exact gradient target or predictive accuracy.
+The central positive result concerns fixed-memory local implicit credit. CAT adds one local adjoint vector relative to AR and can substantially reduce the number of neighbouring Jacobian actions required near criticality without changing the exact gradient target or predictive accuracy. The measured reduction also follows the spectral dependence predicted by the classical second-degree contraction factors across the fixed-recurrent datasets.
 
 The controls define the boundaries of that result. CAT does not provide a general optimizer advantage on feed-forward networks. Chebyshev reaches essentially the same local action count when its coefficient schedule is available. GMRES and quasi-Newton methods can use fewer Jacobian actions when global operations and larger solver state are available. Complex spectra require a spectral parameterization appropriate to the complex domain, and the current complex-spectrum experiments use oracle enclosures.
 
