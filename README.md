@@ -8,9 +8,13 @@ CAT represents backward credit by a local adjoint state. In an ordinary feed-for
 (I-J^T)\lambda=b.
 \]
 
+For a frozen implicit system, the two-state CAT recurrence is not a new numerical iteration. It is an instance of the classical linear second-degree stationary family analyzed by Manteuffel. The CAT name refers to its use as a persistent local neural adjoint dynamics and to the common feed-forward/implicit formulation used in the experiments.
+
 Relative to AR, CAT stores one additional local adjoint vector, uses the same neighbouring \(J^T v\) action, and requires no growing solver history. In reciprocal or symmetrizable near-critical systems this reduces the number of local actions needed for the same exact gradient.
 
-The intended computation model is motivated by physical learning systems with local reciprocal couplings. Neighbouring interactions can be implemented directly by the substrate, while Krylov inner products, dense quasi-Newton state, or Anderson least-squares reductions require additional readout and aggregation. The repository therefore reports general solvers as references rather than as matched local competitors.
+Chebyshev semi-iteration is the closest equal-locality numerical control. Once the spectral information is supplied, it also uses two vectors and local \(J^T v\) actions, and its action count is essentially the same as CAT in the spectral experiments. The difference considered here is that CAT uses fixed coefficients after calibration, while Chebyshev uses an iteration-dependent coefficient schedule. No action-count advantage over Chebyshev is claimed.
+
+The intended computation model is motivated by physical learning systems with local reciprocal couplings. Neighbouring interactions can be implemented directly by the substrate, while Krylov inner products, dense quasi-Newton state, or Anderson least-squares reductions require additional readout and aggregation. These examples motivate the operation model only. The repository does not claim a measured hardware speed, energy, or communication advantage.
 
 **Version 1.0.0** is the manuscript reference release.
 
@@ -83,7 +87,7 @@ Fixed recurrent operator:
 python experiments/run_implicit_dataset_suite.py --profile standard --group core --output results/implicit_core
 ```
 
-CAT uses fewer local adjoint actions in all 24 core/scaling pairs. The median AR/CAT action ratio is 2.67 and paired test accuracy is unchanged. MNIST gives a 1.77 ratio with the same accuracy. CIFAR-10 is retained only as a high-dimensional solver probe.
+CAT uses fewer local adjoint actions in all 24 core/scaling pairs. The median AR/CAT action ratio is 2.67 and paired test accuracy is unchanged. MNIST gives a 1.77 ratio with the same accuracy. The image runs are solver stress tests rather than competitive vision benchmarks.
 
 Trainable recurrent operator:
 
@@ -91,7 +95,7 @@ Trainable recurrent operator:
 python experiments/run_trainable_recurrent_control.py --profile standard --output results/trainable_recurrent
 ```
 
-The degree-four recurrent edge weights are trained jointly with the classifier on `moons`, `circles`, and `breast_cancer`, using 20 seeds per dataset. All 60 paired runs favour CAT in local action count. The pooled median AR/CAT ratio is 2.13 with a 95% bootstrap interval of [1.96, 2.30]. Paired test accuracy is unchanged.
+The degree-four recurrent edge weights are trained jointly with the classifier on `moons`, `circles`, and `breast_cancer`, using 20 seeds per dataset. All 60 paired runs favour CAT in local action count. The pooled median AR/CAT ratio is 2.13 with a 95% interval of [1.96, 2.30]. Paired test accuracy is unchanged.
 
 ## General solver reference
 
@@ -127,9 +131,9 @@ These diagnostics show that the near-critical directed failures in the tested op
 
 The central positive result concerns fixed-memory local implicit credit. CAT adds one local adjoint vector relative to AR and can substantially reduce the number of neighbouring Jacobian actions required near criticality without changing the exact gradient target or predictive accuracy.
 
-The controls define the boundaries of that result. CAT does not provide a general optimizer advantage on feed-forward networks. GMRES and quasi-Newton methods can use fewer Jacobian actions when global operations and larger solver state are available. Complex spectra require a spectral parameterization appropriate to the complex domain.
+The controls define the boundaries of that result. CAT does not provide a general optimizer advantage on feed-forward networks. Chebyshev reaches essentially the same local action count when its coefficient schedule is available. GMRES and quasi-Newton methods can use fewer Jacobian actions when global operations and larger solver state are available. Complex spectra require a spectral parameterization appropriate to the complex domain, and the current complex-spectrum experiments use oracle enclosures.
 
-The heavy-ball, Chebyshev, and nonsymmetric second-degree acceleration principles used in the analysis are classical. The contribution is the formulation and validation of CAT as a fixed-memory local credit dynamics and the identification of the regimes in which its second-order state is useful.
+The heavy-ball, Chebyshev, and nonsymmetric second-degree acceleration principles used in the analysis are classical. The contribution is the neural computation model, the use of a stationary two-state local adjoint dynamics, and the identification and validation of the regimes in which the additional local state is useful relative to matched first-order relaxation.
 
 MWBP remains a bounded negative result in the low-rank output-sourced setting studied here.
 
