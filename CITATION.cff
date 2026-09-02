@@ -3,9 +3,16 @@ message: "If you use this software, please cite the accompanying manuscript."
 title: "Causal Adjoint Transport and Metric-Wave Backpropagation: Research Code"
 type: software
 authors:
+  authors:
   - family-names: Vlahek
     given-names: Dino
     orcid: "https://orcid.org/0000-0002-3911-8685"
+  - family-names: Oreški
+    given-names: Dijana
+  - family-names: Novak
+    given-names: Matija
+  - family-names: Andročec
+    given-names: Darko
 version: 1.0.0
 date-released: 2026-08-24
 license: MIT
