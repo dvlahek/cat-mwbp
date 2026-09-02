@@ -3,7 +3,6 @@ message: "If you use this software, please cite the accompanying manuscript."
 title: "Causal Adjoint Transport: Research Code"
 type: software
 authors:
-  authors:
   - family-names: Vlahek
     given-names: Dino
     orcid: "https://orcid.org/0000-0002-3911-8685"
@@ -14,6 +13,6 @@ authors:
   - family-names: Andročec
     given-names: Darko
 version: 1.0.0
-date-released: 2026-08-24
+date-released: 2026-09-02
 license: MIT
 repository-code: "https://github.com/dvlahek/cat-mwbp"
