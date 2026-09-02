@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite the accompanying manuscript."
-title: "Causal Adjoint Transport and Metric-Wave Backpropagation: Research Code"
+title: "Causal Adjoint Transport: Research Code"
 type: software
 authors:
   authors:
