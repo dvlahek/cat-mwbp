@@ -71,10 +71,12 @@ python -m unittest discover -s tests -v
 ## Feed-forward study
 
 ```bash
-python run_npl_suite.py --profile quick --jobs 2 --output results/quick
+python run_npl_suite.py --profile full --jobs 2 --output results/feedforward_full
 ```
 
 The main non-vision suite contains 861 completed runs. CAT64 is practically equivalent to BP-Momentum under the predefined accuracy and loss margins. At the same local sweep budget, CAT64 does not improve training over AR64.
+
+For a short installation check, use --profile quick.
 
 ## Implicit spectral study
 
