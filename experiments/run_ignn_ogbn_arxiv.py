@@ -298,8 +298,13 @@ def stationary_budget(b,jtv,rho,method,budget):
             if k==0:
                 nxt=x+cheb_a*r
             else:
-                inertia=(half*cheb_a/2)**2
-                new_alpha=1/(center-inertia/cheb_a)
+                # Standard normalized first-kind Chebyshev semi-iteration.
+                # The first update after x_1 has d^2/2, then d^2/4.
+                # beta_k = factor * alpha_(k-1) * alpha_k.
+                # (Using alpha_(k-1)^2 here does NOT generate Chebyshev polynomials.)
+                factor=(half*half/2) if k==1 else (half*half/4)
+                new_alpha=1/(center-factor*cheb_a)
+                inertia=factor*cheb_a*new_alpha
                 nxt=x+new_alpha*r+inertia*(x-old)
                 cheb_a=new_alpha
         else:
