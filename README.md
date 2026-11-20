@@ -144,6 +144,11 @@ The controls define the boundaries of that result. CAT does not provide a genera
 
 The heavy-ball, Chebyshev, and nonsymmetric second-degree acceleration principles used in the analysis are classical. The contribution is the neural computation model, the use of a stationary two-state local adjoint dynamics, and the identification and validation of the regimes in which the additional local state is useful relative to matched first-order relaxation.
 
+
+## Additional post-release audits
+
+The CAT parameter-scaling and finite-tolerance experiments added after the v1.0.0 reference release are documented in [Additional CAT adjoint controls](docs/CAT_REVISION_EXPERIMENTS.md). These scripts are supplementary controlled diagnostics. They do not alter the algorithms or numerical results of the v1.0.0 reference release. Figures generated for the manuscript contain no built-in captions or revision labels.
+
 ## Material not reported in this article
 
 The repository also contains an earlier Metric-Wave Backpropagation (MWBP) line of experiments that is not part of the manuscript. It is retained for completeness and is not required to reproduce any reported result.
