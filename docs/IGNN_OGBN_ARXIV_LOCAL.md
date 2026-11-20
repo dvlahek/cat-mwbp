@@ -86,6 +86,39 @@ change.
 
 The initial IGNN pilot used a nonstandard Chebyshev momentum update. The implementation was corrected in commit `a439a6804fed7bc461fc1f23a77c2230a78fa8b2` to reproduce the normalized Chebyshev first-kind polynomials on a positive spectral interval. **Any Chebyshev plots and CSV rows generated before this correction must be regenerated and must not be cited.** The AR, CAT and GMRES numerical recurrences are unchanged. Re-run the full comparison after `git pull` before interpreting method rankings.
 
+## Measure terminal certification overhead without retraining
+
+The original `solver_budgets.csv` reports solve time only. Computing a
+residual certificate requires one additional `J^T v` application and global
+norm reductions at each check. The published five-epoch and twenty-epoch
+pilot figures therefore **do not include check time**.
+
+The script `experiments/run_ignn_postcheck.py` reads the saved checkpoint,
+rebuilds the frozen graph and adjoint right-hand side, and times each
+terminal residual check separately. No parameter optimization is repeated.
+
+```powershell
+git pull origin main
+$python = (Resolve-Path ..\CAT_revision\.venv\Scripts\python.exe).Path
+
+foreach ($seed in 0,1,2) {
+    & $python experiments\run_ignn_postcheck.py `
+      --checkpoint "results\ignn_arxiv_w32_e20_s$seed\trained_model.pt" `
+      --data-root data\ogb --trust-ogb-cache `
+      --device cpu --budgets 20,30,40,50,60,70,80 `
+      --out "results\ignn_postcheck_s$seed"
+
+    if ($LASTEXITCODE -ne 0) { throw "Postcheck failed for seed $seed" }
+}
+```
+
+Outputs: `solver_budgets_charged.csv`, `postcheck_manifest.json` per
+seed. Columns include `total_charged_jtv_actions`,
+`terminal_check_seconds` and `charged_seconds`, while offline errors are
+computed *after* the check timing. One terminal evaluation is not a
+continuously monitored stopping algorithm. A schedule of repeated checks
+would incur additional graph operations and global reductions.
+
 ## Interpretation and limits
 
 - Each solver receives the same frozen network, graph, and adjoint right-hand side.
