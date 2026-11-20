@@ -54,6 +54,10 @@ Once this prints `DONE`, start the real graph pilot:
 
 The first real run downloads `ogbn-arxiv` and may ask for confirmation. Send `solver_budgets.csv`, `training_history.csv` and `run_manifest.json` for analysis. The CSV contains local-action budgets, relative adjoint/gradient errors, run time, bounds, and GPU allocations. The PDF and PNG are caption-free.
 
+## Chebyshev verification note
+
+The initial IGNN pilot used a nonstandard Chebyshev momentum update. The implementation was corrected in commit `a439a6804fed7bc461fc1f23a77c2230a78fa8b2` to reproduce the normalized Chebyshev first-kind polynomials on a positive spectral interval. **Any Chebyshev plots and CSV rows generated before this correction must be regenerated and must not be cited.** The AR, CAT and GMRES numerical recurrences are unchanged. Re-run the full comparison after `git pull` before interpreting method rankings.
+
 ## Interpretation and limits
 
 - Each solver receives the same frozen network, graph, and adjoint right-hand side.
