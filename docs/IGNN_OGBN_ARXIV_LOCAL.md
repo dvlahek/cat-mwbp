@@ -54,6 +54,34 @@ Once this prints `DONE`, start the real graph pilot:
 
 The first real run downloads `ogbn-arxiv` and may ask for confirmation. Send `solver_budgets.csv`, `training_history.csv` and `run_manifest.json` for analysis. The CSV contains local-action budgets, relative adjoint/gradient errors, run time, bounds, and GPU allocations. The PDF and PNG are caption-free.
 
+## PyTorch 2.6+ OGB cache compatibility
+
+Some released versions of `ogb.nodeproppred.NodePropPredDataset` load their
+processed cache with `torch.load(path)` without specifying `weights_only`.
+Newer PyTorch defaults to restricted `weights_only=True`, which may fail with
+`_pickle.UnpicklingError: Unsupported operand 149`.
+
+For a verified OGB `ogbn-arxiv` download/cache **you personally trust**,
+run the existing experiment with the extra `--trust-ogb-cache` option:
+
+```powershell
+git pull origin main
+
+& $python experiments\run_ignn_ogbn_arxiv.py `
+  --device cpu --epochs 5 --width 32 --rho 0.95 --seed 0 `
+  --budgets 20,30,40,50,60,70,80 `
+  --data-root data\ogb --trust-ogb-cache `
+  --out results\ignn_arxiv_w32_s0_corrected
+```
+
+This opt-in temporarily sets `TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1` **only
+while OGB constructs and reads its dataset/split**, then restores the original
+environment variable. It can execute arbitrary code when reading a malicious
+pickle. Do **not** use it for third-party downloads or unverified cached
+checkpoint files. The default behavior is unchanged unless the flag is given.
+This is an upstream OGB/PyTorch compatibility workaround, not a CAT numerical
+change.
+
 ## Chebyshev verification note
 
 The initial IGNN pilot used a nonstandard Chebyshev momentum update. The implementation was corrected in commit `a439a6804fed7bc461fc1f23a77c2230a78fa8b2` to reproduce the normalized Chebyshev first-kind polynomials on a positive spectral interval. **Any Chebyshev plots and CSV rows generated before this correction must be regenerated and must not be cited.** The AR, CAT and GMRES numerical recurrences are unchanged. Re-run the full comparison after `git pull` before interpreting method rankings.
