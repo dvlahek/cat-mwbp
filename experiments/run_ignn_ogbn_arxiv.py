@@ -25,6 +25,8 @@ import platform
 import sys
 import time
 from pathlib import Path
+from contextlib import contextmanager
+import os
 
 import numpy as np
 import torch
@@ -78,11 +80,37 @@ def synthetic_smoke(seed: int):
     return x, y, torch.from_numpy(edges), splits, c
 
 
-def real_data(root: str):
+@contextmanager
+def trusted_ogb_legacy_load(enabled: bool):
+    """Compatibility with OGB caches written in the legacy pickle format.
+
+    Only permit unsafe pickle loading while OGB is reading its own cached files.
+    Do not enable for untrusted or user-supplied OGB datasets/cache files.
+    """
+    if not enabled:
+        yield
+        return
+    variable = 'TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD'
+    original = os.environ.get(variable)
+    os.environ[variable] = '1'
+    try:
+        yield
+    finally:
+        if original is None:
+            os.environ.pop(variable, None)
+        else:
+            os.environ[variable] = original
+
+
+def real_data(root: str, trust_ogb_cache: bool=False):
     from ogb.nodeproppred import NodePropPredDataset
-    dataset = NodePropPredDataset(name='ogbn-arxiv', root=root)
-    graph, y = dataset[0]
-    split = dataset.get_idx_split()
+    # PyTorch >= 2.6 defaults to weights_only=True. The OGB NodePropPredDataset
+    # code reads its processed cache with torch.load(path), without an explicit
+    # weights_only flag. This opt-in is limited to OGB dataset/split loading.
+    with trusted_ogb_legacy_load(trust_ogb_cache):
+        dataset = NodePropPredDataset(name='ogbn-arxiv', root=root)
+        graph, y = dataset[0]
+        split = dataset.get_idx_split()
     x = torch.as_tensor(graph['node_feat'], dtype=torch.float32)
     labels = torch.as_tensor(y.reshape(-1), dtype=torch.long)
     edges = torch.as_tensor(graph['edge_index'], dtype=torch.long)
@@ -95,7 +123,7 @@ def prepare_data(args, device):
     if args.smoke:
         x,y,edges,idx,nclasses = synthetic_smoke(args.seed)
     else:
-        x,y,edges,idx,nclasses = real_data(args.data_root)
+        x,y,edges,idx,nclasses = real_data(args.data_root,args.trust_ogb_cache)
     n = x.shape[0]
     # No label-based or val/test-feature-based normalization fitting.
     m = x[idx['train']].mean(0, keepdim=True)
@@ -439,6 +467,8 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__,formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     ap.add_argument('--smoke',action='store_true',help='Small synthetic graph, no dataset download')
     ap.add_argument('--data-root',default='data/ogb')
+    ap.add_argument('--trust-ogb-cache',action='store_true',
+                    help='Opt in to unsafe legacy pickle loading ONLY for trusted official OGB cache files (PyTorch >= 2.6)')
     ap.add_argument('--out',type=Path,default=Path('results/ignn_ogbn_arxiv'))
     ap.add_argument('--device',default='auto',help='auto, cpu, or cuda')
     ap.add_argument('--sparse-format',choices=('csr','coo'),default='csr')
