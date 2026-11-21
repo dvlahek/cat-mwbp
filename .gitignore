@@ -1,18 +1,24 @@
-# Local Python environments and bytecode
+# Environments and Python products
 .venv/
 __pycache__/
 *.py[cod]
-
-# Experiment outputs and downloaded datasets stay local.
+# All generated benchmarks and downloads are local
 results/
 data/
-
-# Third-party source checkouts used for optional reproducibility tests.
 external/
-
-# Local backups created while resolving Git pull conflicts.
 local_script_backup/
-
-# Local editor and operating-system clutter.
+# Manuscripts, author material, figures, checkpoints and research archives
+manuscript/
+submission/
+reviewer_responses/
+*.tex
+*.bib
+*.docx
+*.pdf
+*.zip
+*.pt
+*.pth
+*.npz
+*.npy
 .DS_Store
 Thumbs.db

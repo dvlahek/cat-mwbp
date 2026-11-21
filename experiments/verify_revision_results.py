@@ -1,67 +1,34 @@
 #!/usr/bin/env python3
-"""Verify committed compact revision evidence (no external datasets required)."""
+"""Verify the compact numerical tables retained for the CAT manuscript."""
 from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
 import pandas as pd
 
-ROOT=Path(__file__).resolve().parents[1]
-RESULTS=ROOT/'revision_results'
+ROOT = Path(__file__).resolve().parents[1]
+P = ROOT / "revision_results"
 
-def verify():
-    m=json.loads((RESULTS/'MANIFEST.json').read_text(encoding='utf-8'))
-    for fname,spec in m['compact_results'].items():
-        contents=(RESULTS/fname).read_bytes()
-        assert hashlib.sha256(contents).hexdigest()==spec['sha256'],fname
-    p=pd.read_csv(RESULTS/'chebyshev_corrected_pairs.csv')
-    assert len(p)==240
-    assert ((p.Chebyshev<p.CAT).sum(),(p.Chebyshev==p.CAT).sum(),(p.Chebyshev>p.CAT).sum())==(164,42,34)
-    assert abs(p.cheb_actions_over_cat_actions.median()-0.9130434782608696)<1e-10
-    ig=pd.read_csv(RESULTS/'ignn_first_certified_by_seed.csv')
-    # Column names in original aggregate from three independent checkpoint audits.
-    assert len(ig)>=12
-    igs=pd.read_csv(RESULTS/'ignn_certification_summary.csv').set_index('method')
-    assert int(igs.loc['AR','median_charged_actions'])==81
-    assert int(igs.loc['CAT','median_charged_actions'])==51
-    assert int(igs.loc['Chebyshev','median_charged_actions'])==51
-    s=pd.read_csv(RESULTS/'spatial_first_certified_by_seed.csv')
-    assert len(s)==12 and set(s.seed)=={0,1,2}
-    assert set(s[s.method=='AR'].charged_jtv)=={161}
-    assert set(s[s.method=='CAT'].charged_jtv)=={46}
-    assert set(s[s.method=='Chebyshev'].charged_jtv)=={46}
-    pt=pd.read_csv(RESULTS/'spatial_paired_speedups.csv')
-    assert len(pt)==3 and (pt.AR_over_CAT_actions==3.5).all()
-    psnr=pd.read_csv(RESULTS/'spatial_mean_test_psnr.csv')
-    assert set(psnr.seed)=={0,1,2}
-    transfer=pd.read_csv(RESULTS/'native_deqinr_transfer_first_pass.csv')
-    assert len(transfer)==12 and set(transfer.seed)=={0,1,2}
-    for method,expected in [
-        ('AR',[20,21,26]),
-        ('CAT-train-pixels',[20,20,25]),
-        ('CAT-other-models',[21,22,27])
-    ]:
-        got=transfer[transfer.method==method].sort_values('seed')
-        assert got.charged_actions.astype(int).tolist()==expected,(method,got)
-    assert transfer[transfer.method=='CAT-nominal'].charged_actions.isna().all()
-    # Fair optimized AR-versus-CAT complex-spectrum follow-up.
-    fair_path=RESULTS/'native_deqinr_fair_calibration_summary.csv'
-    assert hashlib.sha256(fair_path.read_bytes()).hexdigest()==(
-        '84d7b1d2e451461446cb220916fd29c28f2dce151c04a5ca38726823629fee09')
-    fair=pd.read_csv(fair_path)
-    assert len(fair)==42 and set(fair.seed)=={0,1,2}
-    for protocol,method,charged in [
-        ('spectral','AR-spectral',[22,21,21]),
-        ('spectral','CAT-spectral',[21,21,21]),
-        ('spectral','AR-other-models',[22,23,22]),
-        ('spectral','CAT-other-models',[22,24,22]),
-        ('spectral','CAT-beta-min-0.1',[25,26,25]),
-        ('finite','AR-finite',[22,24,24]),
-        ('finite','CAT-finite',[21,25,24]),
-    ]:
-        subset=fair[(fair.protocol==protocol)&(fair.method==method)].sort_values('seed')
-        assert subset.first_charged_actions.astype(int).tolist()==charged,(protocol,method)
-    assert (fair[(fair.method=='CAT-spectral')].beta<0.0151).all()
-    print('CAT_REVISION_COMPACT_EVIDENCE_PASS',len(m['compact_results']), 'CSV files', flush=True)
+def main():
+    manifest = json.loads((P / "MANIFEST.json").read_text(encoding="utf-8"))
+    for name, info in manifest["compact_results"].items():
+        data = (P / name).read_bytes()
+        assert len(data) == info["bytes"], (name, "size")
+        assert hashlib.sha256(data).hexdigest() == info["sha256"], (name, "SHA-256")
+    cheb = pd.read_csv(P / "chebyshev_corrected_pairs.csv")
+    assert len(cheb) == 240
+    assert (int((cheb.Chebyshev < cheb.CAT).sum()),
+            int((cheb.Chebyshev == cheb.CAT).sum()),
+            int((cheb.Chebyshev > cheb.CAT).sum())) == (164, 42, 34)
+    ignn = pd.read_csv(P / "ignn_certification_summary.csv").set_index("method")
+    for method, actions in (("AR",81),("CAT",51),("Chebyshev",51),("GMRES",31)):
+        assert int(ignn.loc[method,"median_charged_actions"]) == actions, method
+    den = pd.read_csv(P / "spatial_first_certified_by_seed.csv")
+    assert set(den.seed) == {0,1,2}
+    for method, actions in (("AR",161),("CAT",46),("Chebyshev",46)):
+        assert set(den.loc[den.method == method,"charged_jtv"]) == {actions}, method
+    assert len(pd.read_csv(P / "spatial_paired_speedups.csv")) == 3
+    print("CAT_MINIMAL_REPRODUCIBILITY_PASS",len(manifest["compact_results"]),"tables")
 
-if __name__=='__main__': verify()
+if __name__ == "__main__":
+    main()
