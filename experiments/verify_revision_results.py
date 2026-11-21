@@ -34,6 +34,16 @@ def verify():
     assert len(pt)==3 and (pt.AR_over_CAT_actions==3.5).all()
     psnr=pd.read_csv(RESULTS/'spatial_mean_test_psnr.csv')
     assert set(psnr.seed)=={0,1,2}
+    transfer=pd.read_csv(RESULTS/'native_deqinr_transfer_first_pass.csv')
+    assert len(transfer)==12 and set(transfer.seed)=={0,1,2}
+    for method,expected in [
+        ('AR',[20,21,26]),
+        ('CAT-train-pixels',[20,20,25]),
+        ('CAT-other-models',[21,22,27])
+    ]:
+        got=transfer[transfer.method==method].sort_values('seed')
+        assert got.charged_actions.astype(int).tolist()==expected,(method,got)
+    assert transfer[transfer.method=='CAT-nominal'].charged_actions.isna().all()
     print('CAT_REVISION_COMPACT_EVIDENCE_PASS',len(m['compact_results']), 'CSV files', flush=True)
 
 if __name__=='__main__': verify()
