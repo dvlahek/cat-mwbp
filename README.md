@@ -10,7 +10,7 @@ For a frozen implicit system, the two-state CAT recurrence is not a new numerica
 
 Relative to AR, CAT stores one additional local adjoint vector, uses the same neighbouring $J^\top v$ action, and requires no growing solver history. In reciprocal or symmetrizable near-critical systems this reduces the number of local actions needed for the same exact gradient.
 
-Chebyshev semi-iteration is the closest equal-locality numerical control. Once the spectral information is supplied, it also uses two vectors and local $J^\top v$ actions, and its action count is essentially the same as CAT in the spectral experiments. CAT uses fixed coefficients after calibration, whereas Chebyshev follows an iteration-dependent coefficient schedule. A scheduled Chebyshev implementation therefore requires the participating units to share the same coefficient index, while CAT does not. This is a structural difference in the local update, not an action-count advantage over Chebyshev.
+Chebyshev semi-iteration is the closest equal-locality numerical control. Once spectral information is supplied, it also uses two vectors and local $J^\top v$ actions. **A November 2026 re-audit corrected the historical Chebyshev recurrence** and found that scheduled Chebyshev needs fewer actions than CAT in 164 of 240 matched cases (42 ties, 34 CAT-favouring cases). CAT uses fixed coefficients after calibration, whereas Chebyshev follows an iteration-dependent coefficient schedule. A scheduled Chebyshev implementation therefore requires the participating units to share the same coefficient index, while CAT does not. This is a structural difference in the local update, not an action-count advantage over Chebyshev.
 
 The intended computation model is motivated by physical learning systems with local reciprocal couplings. Neighbouring interactions can be implemented directly by the substrate, while Krylov inner products, dense quasi-Newton state, or Anderson least-squares reductions require additional readout and aggregation. These examples motivate the operation model only. The repository does not claim a measured hardware speed, energy, or communication advantage.
 
@@ -140,14 +140,27 @@ These diagnostics show that the near-critical directed failures in the tested op
 
 The central positive result concerns fixed-memory local implicit credit. CAT adds one local adjoint vector relative to AR and can substantially reduce the number of neighbouring Jacobian actions required near criticality without changing the exact gradient target or predictive accuracy. The measured reduction also follows the spectral dependence predicted by the classical second-degree contraction factors across the fixed-recurrent datasets.
 
-The controls define the boundaries of that result. CAT does not provide a general optimizer advantage on feed-forward networks. Chebyshev reaches essentially the same local action count when its coefficient schedule is available. GMRES and quasi-Newton methods can use fewer Jacobian actions when global operations and larger solver state are available. Complex spectra require a spectral parameterization appropriate to the complex domain, and the current complex-spectrum experiments use oracle enclosures.
+The controls define the boundaries of that result. CAT does not provide a general optimizer advantage on feed-forward networks. Corrected scheduled Chebyshev often needs slightly fewer actions than CAT and is equally local in its $J^\top v$ updates. CAT does not claim an unconditional action-count advantage over Chebyshev. GMRES and quasi-Newton methods can use fewer Jacobian actions when global operations and larger solver state are available. Complex spectra require a spectral parameterization appropriate to the complex domain, and the current complex-spectrum experiments use oracle enclosures.
 
 The heavy-ball, Chebyshev, and nonsymmetric second-degree acceleration principles used in the analysis are classical. The contribution is the neural computation model, the use of a stationary two-state local adjoint dynamics, and the identification and validation of the regimes in which the additional local state is useful relative to matched first-order relaxation.
 
 
-## Additional post-release audits
+## Journal revision evidence (November 2026)
 
-The CAT parameter-scaling and finite-tolerance experiments added after the v1.0.0 reference release are documented in [Additional CAT adjoint controls](docs/CAT_REVISION_EXPERIMENTS.md). These scripts are supplementary controlled diagnostics. They do not alter the algorithms or numerical results of the v1.0.0 reference release. Figures generated for the manuscript contain no built-in captions or revision labels.
+**Start with [Revision evidence and limitations](docs/REVISION_EVIDENCE.md).** It distinguishes original v1.0.0 results from corrected post-release solver comparisons, and links compact CSV tables under [`revision_results/`](revision_results/) with SHA-256 metadata. Run `python experiments/verify_revision_results.py` to check the evidence snapshot. The historical spectral script and its previously reported Chebyshev outcomes are **not** corrected in place; use `experiments/run_chebyshev_corrected_audit.py` for a validated Chebyshev control.
+
+The parameter-scaling and finite-tolerance studies are described in [Additional CAT adjoint controls](docs/CAT_REVISION_EXPERIMENTS.md). Further experiments include [IGNN on ogbn-arxiv](docs/IGNN_OGBN_ARXIV_LOCAL.md), [Anderson and corrected Chebyshev controls](docs/CAT_FINAL_EXPERIMENTS.md), and [spatial image denoising](docs/SPATIAL_DENOISING_CAT.md). All are controlled studies, not unrestricted DEQ demonstrations.
+
+**Certified frozen-solver comparison at relative adjoint bound `1e-5`, including one terminal residual check:**
+
+| Controlled task (three seeds) | AR charged actions | CAT charged actions | Chebyshev charged actions | GMRES charged actions | Paired median AR/CAT CPU time ratio |
+|---|---:|---:|---:|---:|---:|
+| `ogbn-arxiv` IGNN-style graph | 81 | 51 | 51 | 31 | 1.55x |
+| Spatial real-image denoising | 161 | 46 | 46 | 31–36 | 3.56x |
+
+The graph model has 5.42 million equilibrium-state variables **but only 5,448 learned parameters**. The denoiser does not consistently beat a Gaussian smoothing baseline in PSNR. CPU timings depend on the platform and implementation; certified counts are first passes on preselected budget grids. Only one terminal check is charged, not an autonomous global-norm-free stopping rule. Both models use controlled real-spectrum contractive dynamics. They do not establish CAT superiority over corrected Chebyshev, GMRES, or unrestricted modern DEQs.
+
+Reproducibility archives with full checkpoints and figures should be deposited separately when ready; a Zenodo DOI is **not yet assigned**. Revision results do not rewrite historical v1.0.0 result files.
 
 ## Material not reported in this article
 
