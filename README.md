@@ -162,9 +162,11 @@ The graph model has 5.42 million equilibrium-state variables **but only 5,448 le
 
 Reproducibility archives with full checkpoints and figures should be deposited separately when ready; a Zenodo DOI is **not yet assigned**. Revision results do not rewrite historical v1.0.0 result files.
 
-## Additional upstream-architecture stress test (pending local execution)
+## Original TorchDEQ architecture: native nonnormal stress audit (completed)
 
-The new [unprojected original TorchDEQ DEQ-INR audit](docs/OFFICIAL_DEQINR_NONNORMAL.md) imports the published `DEQINR`, `MFN` and `SIRENInjection` modules without forcing symmetric or contractive recurrent matrices. Its CPU-scaled *training protocol* uses independent dense exact implicit-gradient solves rather than CAT, then freezes the model and compares AR, CAT, corrected Chebyshev and GMRES on the same nonnormal Jacobian. An optional **oracle complex-spectrum CAT** calibration is a nonlocal diagnostic, not a deployable distributed method. No upstream TorchDEQ result has yet been confirmed by a completed local run. We will report failures as well as successful solves. The manuscript and reviewer-response files are not stored in this repository.
+The [unprojected upstream DEQ-INR benchmark](docs/OFFICIAL_DEQINR_NONNORMAL.md) uses the actual TorchDEQ `DEQINR`, `MFN` and `SIRENInjection` modules without imposing symmetric or contractive recurrent weights. Three independent CPU-sized runs use exact dense implicit gradients for training, then compare solvers on the **same frozen** complex-spectrum Jacobians. See the [verified result and provenance summary](docs/OFFICIAL_DEQINR_NONNORMAL_RESULTS.md) and [three-seed numerical table](revision_results/official_deqinr_nonnormal_summary.csv).
+
+**Negative result:** nominal real-interval CAT and Chebyshev do not reach the `1e-5` adjoint certificate through 120 tested iterations and diverge in all three seeds; AR converges on the tested grid at 31 charged operations. With **in-sample global complex-spectrum oracle calibration**, CAT converges at 31, 21 and 21 operations respectively. This is diagnostic global calibration, **not a practically local CAT result**. The model is compact and its train/holdout pixels come from the same image; this is not a replication of a full official TorchDEQ benchmark. No manuscript or reviewer-response file is stored in this repository.
 
 ## Material not reported in this article
 
