@@ -1,0 +1,18 @@
+# Local Python environments and bytecode
+.venv/
+__pycache__/
+*.py[cod]
+
+# Experiment outputs and downloaded datasets stay local.
+results/
+data/
+
+# Third-party source checkouts used for optional reproducibility tests.
+external/
+
+# Local backups created while resolving Git pull conflicts.
+local_script_backup/
+
+# Local editor and operating-system clutter.
+.DS_Store
+Thumbs.db
