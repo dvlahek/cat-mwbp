@@ -2,8 +2,8 @@
 """CAT on an actual TorchDEQ DEQ-INR MFN/SIREN-like image representation layer.
 
 Uses `DEQINR`, `MFN`, and `SIRENInjection` from the *upstream* TorchDEQ zoo.
-The original DEQ-INR model's forward architecture is preserved, but the one
-recurrent z_map is FROZEN to a symmetric, nonnegative, contractive ring.
+The original DEQ-INR model's forward architecture is preserved, while the
+trained recurrent z_map is projected to a symmetric nonnegative contraction.
 The coordinate injection is constrained so cosine derivatives remain positive.
 This is therefore a controlled adaptation, NOT unmodified published DEQ-INR.
 
@@ -70,7 +70,8 @@ def project_recurrent(model,rho):
     W=model.f.layers[0].z_map.weight
     symmetric=torch.clamp((W+W.T)*0.5,min=0.)
     bound=float(symmetric.sum(1).max())
-    if bound>rho:symmetric.mul_(rho/bound)
+    target=rho*(1-1e-5)  # leave headroom for float32 rounding
+    if bound>target:symmetric.mul_(target/bound)
     W.copy_(symmetric)
     model.f.layers[0].z_map.bias.zero_()
 
@@ -264,6 +265,7 @@ def main():
     torch.manual_seed(args.seed);np.random.seed(args.seed)
     model=official_model(args.torchdeq_zoo,args.width)
     W=set_contractive_ring(model,args.rho)
+    project_recurrent(model,args.rho)
     project_injection(model,args.injection_cap)
     coords,target,itrain,ihold,name=image_coords(args.side,args.seed,args.smoke)
     params=list(model.injection.parameters())+list(model.output_map.parameters())+\
