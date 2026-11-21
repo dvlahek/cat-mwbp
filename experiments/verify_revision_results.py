@@ -44,6 +44,24 @@ def verify():
         got=transfer[transfer.method==method].sort_values('seed')
         assert got.charged_actions.astype(int).tolist()==expected,(method,got)
     assert transfer[transfer.method=='CAT-nominal'].charged_actions.isna().all()
+    # Fair optimized AR-versus-CAT complex-spectrum follow-up.
+    fair_path=RESULTS/'native_deqinr_fair_calibration_summary.csv'
+    assert hashlib.sha256(fair_path.read_bytes()).hexdigest()==(
+        '84d7b1d2e451461446cb220916fd29c28f2dce151c04a5ca38726823629fee09')
+    fair=pd.read_csv(fair_path)
+    assert len(fair)==42 and set(fair.seed)=={0,1,2}
+    for protocol,method,charged in [
+        ('spectral','AR-spectral',[22,21,21]),
+        ('spectral','CAT-spectral',[21,21,21]),
+        ('spectral','AR-other-models',[22,23,22]),
+        ('spectral','CAT-other-models',[22,24,22]),
+        ('spectral','CAT-beta-min-0.1',[25,26,25]),
+        ('finite','AR-finite',[22,24,24]),
+        ('finite','CAT-finite',[21,25,24]),
+    ]:
+        subset=fair[(fair.protocol==protocol)&(fair.method==method)].sort_values('seed')
+        assert subset.first_charged_actions.astype(int).tolist()==charged,(protocol,method)
+    assert (fair[(fair.method=='CAT-spectral')].beta<0.0151).all()
     print('CAT_REVISION_COMPACT_EVIDENCE_PASS',len(m['compact_results']), 'CSV files', flush=True)
 
 if __name__=='__main__': verify()
