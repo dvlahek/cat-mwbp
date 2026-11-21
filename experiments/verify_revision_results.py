@@ -13,8 +13,21 @@ def main():
     manifest = json.loads((P / "MANIFEST.json").read_text(encoding="utf-8"))
     for name, info in manifest["compact_results"].items():
         data = (P / name).read_bytes()
-        assert len(data) == info["bytes"], (name, "size")
-        assert hashlib.sha256(data).hexdigest() == info["sha256"], (name, "SHA-256")
+        # Git on Windows may convert LF to CRLF on checkout. The repository
+        # has historical CSVs in both formats. Compare only exact original
+        # content hashes under the two standard end-of-line representations.
+        # No numeric values or other whitespace are changed by this check.
+        lf = data.replace(b"\r\n", b"\n")
+        variants = (data, lf, lf.replace(b"\n", b"\r\n"))
+        matched = any(
+            len(candidate) == info["bytes"]
+            and hashlib.sha256(candidate).hexdigest() == info["sha256"]
+            for candidate in variants
+        )
+        assert matched, (
+            name, "content mismatch beyond LF/CRLF conversion",
+            "checkout_size", len(data), "expected_size", info["bytes"]
+        )
     cheb = pd.read_csv(P / "chebyshev_corrected_pairs.csv")
     assert len(cheb) == 240
     assert (int((cheb.Chebyshev < cheb.CAT).sum()),
