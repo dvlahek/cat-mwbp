@@ -168,6 +168,10 @@ The [unprojected upstream DEQ-INR benchmark](docs/OFFICIAL_DEQINR_NONNORMAL.md) 
 
 **Negative result:** nominal real-interval CAT and Chebyshev do not reach the `1e-5` adjoint certificate through 120 tested iterations and diverge in all three seeds; AR converges on the tested grid at 31 charged operations. With **in-sample global complex-spectrum oracle calibration**, CAT converges at 31, 21 and 21 operations respectively. This is diagnostic global calibration, **not a practically local CAT result**. The model is compact and its train/holdout pixels come from the same image; this is not a replication of a full official TorchDEQ benchmark. No manuscript or reviewer-response file is stored in this repository.
 
+### Held-out complex-spectrum calibration transfer (completed)
+
+The [frozen DEQ-INR transfer audit](docs/NATIVE_DEQINR_SPECTRAL_TRANSFER.md) fits fixed CAT coefficients solely from either 64 training-pixel Jacobians of the same checkpoint or the **other two model checkpoints** (leave-one-model-out). It evaluates on 64 separate held-out pixels, excluding the 16 previously inspected in-sample-oracle pilot. The new evaluation Jacobian spectra are not used for fitting. Across three seeds, the training-pixel transfer reaches the offline `1e-5` relative-adjoint certificate in **20/20/25** charged actions versus **20/21/26** for AR; leave-one-model-out transfer takes **21/22/27**. Thus calibration transfers **stability**, not a material speed advantage. All parameter selection still uses global training eigenvalues, and the offline certificate uses global test SVD. A minimal [summary CSV](revision_results/native_deqinr_transfer_first_pass.csv) is tracked; full outputs stay local.
+
 ## Material not reported in this article
 
 The repository also contains an earlier Metric-Wave Backpropagation (MWBP) line of experiments that is not part of the manuscript. It is retained for completeness and is not required to reproduce any reported result.
