@@ -2,6 +2,8 @@
 
 New experiments supplement **Local Second-Order Adjoint Dynamics for Implicit Neural Networks**. They do not overwrite historical v1.0.0 outputs. Run commands from the `cat-mwbp` repository root.
 
+**November 2026 completion status.** The corrected Chebyshev sweep, frozen Anderson/Broyden timing study, three-seed IGNN certification and three-seed spatial denoising comparison have completed. Compact source-derived tables are committed in [revision_results](../revision_results/) with checksums and a [verification script](../experiments/verify_revision_results.py). Their interpretation and negative/limited outcomes are summarized in [REVISION_EVIDENCE.md](REVISION_EVIDENCE.md). The constrained DEQ-INR image reconstruction pilot also completed but did not demonstrate a strong reconstruction application and should not be described as a successful modern-DEQ benchmark. Historical Chebyshev output remains retained and is not corrected in place. The revision is now in manuscript/reviewer-response reconciliation, not a new numerical-search phase.
+
 ## 1. CPU time and memory on original solver benchmark
 
 Uses frozen Anderson/Broyden selected hyperparameters from `reference_results/implicit`, matched exact-error stopping at `1e-6`, and the original `make_case` generator. Anderson-m is implemented with a bounded deque of length `m`; the script confirms its output and action count match the original routine, whose Python lists incidentally retain obsolete history.
@@ -65,8 +67,8 @@ Outputs: `train_history.csv`, `solver_budgets.csv`, `trained_model.pt`, `manifes
 
 ## Revision decision gate
 
-1. Corrected Chebyshev action counts and manuscript figure claims verified and updated.
+1. Corrected Chebyshev action counts have been verified in post-release CSVs; update legacy manuscript tables and figures before submission.
 2. Time and memory descriptions distinguish actual measurements from analytical estimates.
-3. Real DEQ-INR pilot converges and has verified Jacobian assumptions.
+3. Controlled DEQ-INR pilot converged, but reconstruction quality was weak; retain as a limitation, not successful broad-DEQ validation.
 4. Original IGNN three-seed certification is retained separately with the original checkpoint hashes.
 5. Only then finalize editor/reviewer responses and archive the exact release/outputs with a Zenodo DOI.
