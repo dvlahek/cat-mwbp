@@ -1,0 +1,5 @@
+method,seeds,median_charged_jtv,min_charged_jtv,max_charged_jtv,median_charged_seconds
+AR,3,161.0,161,161,0.0348778789998505
+CAT,3,46.0,46,46,0.0098756330003197
+Chebyshev,3,46.0,46,46,0.0099968860004082
+GMRES,3,36.0,31,36,0.0229593750000276
