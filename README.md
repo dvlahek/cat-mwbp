@@ -162,6 +162,10 @@ The graph model has 5.42 million equilibrium-state variables **but only 5,448 le
 
 Reproducibility archives with full checkpoints and figures should be deposited separately when ready; a Zenodo DOI is **not yet assigned**. Revision results do not rewrite historical v1.0.0 result files.
 
+## Additional upstream-architecture stress test (pending local execution)
+
+The new [unprojected original TorchDEQ DEQ-INR audit](docs/OFFICIAL_DEQINR_NONNORMAL.md) imports the published `DEQINR`, `MFN` and `SIRENInjection` modules without forcing symmetric or contractive recurrent matrices. Its CPU-scaled *training protocol* uses independent dense exact implicit-gradient solves rather than CAT, then freezes the model and compares AR, CAT, corrected Chebyshev and GMRES on the same nonnormal Jacobian. An optional **oracle complex-spectrum CAT** calibration is a nonlocal diagnostic, not a deployable distributed method. No upstream TorchDEQ result has yet been confirmed by a completed local run. We will report failures as well as successful solves. The manuscript and reviewer-response files are not stored in this repository.
+
 ## Material not reported in this article
 
 The repository also contains an earlier Metric-Wave Backpropagation (MWBP) line of experiments that is not part of the manuscript. It is retained for completeness and is not required to reproduce any reported result.
