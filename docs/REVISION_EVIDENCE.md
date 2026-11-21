@@ -53,6 +53,14 @@ Repeat the training command for `--seed 1` and `--seed 2`, with corresponding ou
 
 An original TorchDEQ DEQ-INR module was imported, but its recurrent operator and coordinate injection were **constrained** to permit a real-spectrum contractive CAT calibration. The image reconstruction is weak (held-out PSNR approximately 13.17 dB for widths 48 and 96). A simple linear coordinate regression matches/exceeds this performance, and the larger model loses in solver action count to AR. It is **not** evidence of successful image reconstruction or a CAT advantage for arbitrary TorchDEQ. At most it belongs in supplementary limitations or a transparent negative/transfer control; do not count it as an independent successful benchmark.
 
+## 6. Unprojected upstream TorchDEQ DEQ-INR — native complex/nonnormal stress result
+
+A second, deliberately **unprojected** experiment uses original upstream DEQ-INR/MFN/SIRENInjection modules. It does not symmetrize or project the recurrent matrix, and the model is trained by an independent exact dense IFT adjoint, not by CAT. This compact CPU setup is not the published full DEQ-INR training benchmark. On a single camera image (same-image train/holdout pixel split), three model seeds achieve held-out PSNR 23.43, 21.94 and 23.19 dB with 1,281 trainable parameters. Frozen Jacobian blocks have complex eigenvalues and are nonnormal. Their maximum `||J||_2` is about 1.10–1.11.
+
+At the first tested budget reaching an **oracle-SVD-based relative adjoint certificate** of `1e-5`, AR uses 31 charged actions in all three seeds. **CAT and corrected Chebyshev with the predeclared real interval fail to converge even by 120 tested iterations.** An optional **global complex-spectrum, in-sample oracle calibration** recovers CAT convergence at 31/21/21 actions, matching GMRES action budgets on this grid. The oracle optimizer uses *all audited eigenvalues, including the evaluation blocks*, and the SVD stopping bound is also nonlocal. This is useful for identifying a failure mode, not a deployable or generalizing CAT advantage. See [native DEQ-INR audit](OFFICIAL_DEQINR_NONNORMAL_RESULTS.md) and [compact numeric CSV](../revision_results/official_deqinr_nonnormal_summary.csv). Full result archive checksum is documented there.
+
+This increases the external architectural scope, **but does not close a request for three or four successful unmodified modern DEQ applications**. No universal CAT advantage should be claimed from this negative control.
+
 ## What the editor and reviewers can safely infer
 
 - **Strong controlled result:** CAT reduces local adjoint actions versus AR on tested contractive real-spectrum systems, particularly close to criticality; advantages occur in tabular, large-graph and spatial-image tasks.
