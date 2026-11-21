@@ -61,6 +61,10 @@ At the first tested budget reaching an **oracle-SVD-based relative adjoint certi
 
 This increases the external architectural scope, **but does not close a request for three or four successful unmodified modern DEQ applications**. No universal CAT advantage should be claimed from this negative control.
 
+### Held-out coefficient transfer on the native nonnormal models
+
+A follow-on [transfer audit](NATIVE_DEQINR_SPECTRAL_TRANSFER.md) freezes coefficients chosen **without evaluation Jacobian eigenvalues**. Calibration from the same model's 64 *training-pixel* Jacobian blocks gives CAT first-certification counts **20, 20, 25** versus AR's **20, 21, 26** across three models. More stringent calibration on *only the other two models* gives CAT **21, 22, 27**. The nominal invalid real-interval CAT does not pass within 120 iterations. Thus spectral fitting from separate data can restore **stability**, but does **not** show meaningful acceleration or local calibration. Training-calibration eigenvalues and evaluation SVD still require global information. These checkpoints share the same image source, so do not present this as a new independent visual benchmark. The 64-pixel transfer test excludes the 16 previously inspected holdout pixels from the earlier oracle pilot. See [compact results](../revision_results/native_deqinr_transfer_first_pass.csv).
+
 ## What the editor and reviewers can safely infer
 
 - **Strong controlled result:** CAT reduces local adjoint actions versus AR on tested contractive real-spectrum systems, particularly close to criticality; advantages occur in tabular, large-graph and spatial-image tasks.
