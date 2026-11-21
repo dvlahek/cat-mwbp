@@ -1,0 +1,52 @@
+{
+  "description": "Compact derived summaries supporting the 2026-11 CAT manuscript revision. Original full runs, checkpoint binaries, image outputs and measurement histories are not archived in GitHub. See Zenodo submission archive when deposited.",
+  "source_archives_sha256": {
+    "allresults.zip": "d8879eb8a27c9afa7058dccb1e4ae238f92faa21ec6f5f589315a5dc7943fe72",
+    "ignn_postcheck_all.zip": "bcc52ae13c7ae85175de843a2e097027731eb803bcbe37322282fdae1e469066",
+    "ignn_three_seeds.zip": "731a771687c7371f6dd3645543bbb0196a3813012d1fb3313e5510f56cffcac6",
+    "CAT_spatial_denoising_three_seeds_final.zip": "a2b0dabbc1fff9f67af5408202b9968b5b32bfaee99ca7cca1bf4bd6aa0c7c60"
+  },
+  "compact_results": {
+    "chebyshev_corrected_pairs.csv": {
+      "sha256": "2e1b198df1d10369565a79205f36fbb4486c1cbc6b32d995e452312666992c37",
+      "bytes": 13115
+    },
+    "chebyshev_corrected_summary.csv": {
+      "sha256": "166c33e6d21884f8c0283cfd7c123fb56da1d372c9b518aa282cd065184b2aa7",
+      "bytes": 2748
+    },
+    "solver_cost_summary.csv": {
+      "sha256": "7907cec1b32a6b666f2d5a562191b205371ee0dcebf5ff1b995b732372ffe65d",
+      "bytes": 2044
+    },
+    "ignn_certification_summary.csv": {
+      "sha256": "111720399eb8f496ab4b610989e8a02137b2ee2640d9cc5084dd145358f8811f",
+      "bytes": 542
+    },
+    "ignn_first_certified_by_seed.csv": {
+      "sha256": "4589045f524199eb13b55d160cbe6e632498327c08cdee75b031aa67d5a7097a",
+      "bytes": 1423
+    },
+    "ignn_paired_time_ratios.csv": {
+      "sha256": "77bf1def1706ee44b75442dea116f02d9294d32307b5da519437e88d90e329af",
+      "bytes": 350
+    },
+    "spatial_certified_solver_summary.csv": {
+      "sha256": "e5af5127833766eb3863bc2d519609b5071f8d95937483e4e3f6b1fcdb40bd5c",
+      "bytes": 241
+    },
+    "spatial_first_certified_by_seed.csv": {
+      "sha256": "a97cea898564185b1d783bf7b520fae7d94bb3dc0478d5832e71201ffb85beac",
+      "bytes": 2791
+    },
+    "spatial_mean_test_psnr.csv": {
+      "sha256": "25b50c9965e214292682c5c8db1dc81498368c47560116e25c9b3ef284346d4e",
+      "bytes": 617
+    },
+    "spatial_paired_speedups.csv": {
+      "sha256": "b4da8085365c287f22de32e118e9c70fd6bd63ea0d9d91c8c4d8bdf9cb2c310a",
+      "bytes": 115
+    }
+  },
+  "accuracy_note": "Fixed-budget first-certification, one extra J^T v and norm reductions. CPU timing is implementation specific. Denoising test metrics report honest non-winning seed; Chebyshev is corrected 2026-11 and v1.0.0 historical controls are not corrected."
+}
