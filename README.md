@@ -86,6 +86,10 @@ python experiments/summarize_spatial_denoising.py --root results --prefix spatia
 
 **Reproducibility limits:** Only compact summary tables are distributed here, not full datasets, model checkpoints, image outputs or complete per-step histories. The IGNN and image audits report first passes in predefined iteration-budget grids with one charged terminal residual check; they are not continuously monitored, globally communication-free stopping procedures. CPU times are implementation- and hardware-specific.
 
+## Versioned archive
+
+For the revised manuscript, connect this repository to Zenodo **before** publishing the new GitHub release `v1.1.0`. Zenodo will assign the DOI to that frozen release. The older `v1.0.0` predates the revision experiments. Do not cite a DOI until Zenodo has issued it.
+
 ## Citation and license
 
 See `CITATION.cff` and `LICENSE` (MIT). Manuscript drafts, supplementary LaTeX, reviewer correspondence and experimental attempts not reported in the article are deliberately excluded.
