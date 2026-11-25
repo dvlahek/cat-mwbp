@@ -2,7 +2,7 @@
 
 The offline audit evaluates the relative adjoint-error certificate after every iteration on a frozen model. The reported equivalent action count is the first passing iteration plus one terminal Jacobian-transpose action. It excludes the cost of intermediate diagnostic checks.
 
-Figure 4 and Table S6 use the original predefined budget grids. The graph audit uses the original graph models; Table S8 uses three independently retrained spatial models.
+Figure 4 and Table S6 use predefined budget grids. The graph audit uses the original graph models. All spatial comparisons in Tables S6–S8 use the same three independently retrained, archived models.
 
 ## Archived results
 
