@@ -60,6 +60,20 @@ def main():
     assert (int((vis["AR-oracle"] > vis["CAT-oracle"]).sum()),
             int((vis["Chebyshev-oracle-corrected"] < vis["CAT-oracle"]).sum()),
             int((vis["Chebyshev-oracle-corrected"] == vis["CAT-oracle"]).sum())) == (48,35,13)
+    fine = pd.read_csv(P / "fine_grid_first_pass.csv")
+    assert len(fine) == 18
+    assert not fine.duplicated(["application", "seed", "method"]).any()
+    assert (fine.first_certified_charged_actions == fine.first_certified_iteration + 1).all()
+    assert (fine.certified_relative_adjoint_bound < 1e-5).all()
+    for app, expected in {
+        "graph": {"AR": [76, 73, 75], "CAT": [46, 46, 46], "Chebyshev": [48, 48, 48]},
+        "spatial_retrained": {"AR": [147, 156, 122], "CAT": [42, 41, 43], "Chebyshev": [44, 43, 45]},
+    }.items():
+        q = fine[fine.application == app].pivot(index="seed", columns="method", values="first_certified_charged_actions")
+        assert list(q.index) == [0, 1, 2]
+        for method, values in expected.items():
+            assert q[method].tolist() == values
+        assert (q.Chebyshev - q.CAT == 2).all()
     print("CAT_MINIMAL_REPRODUCIBILITY_PASS",len(manifest["compact_results"]),"tables")
 
 if __name__ == "__main__":
