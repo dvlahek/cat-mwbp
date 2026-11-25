@@ -79,16 +79,12 @@ python experiments/summarize_spatial_denoising.py --root results --prefix spatia
 
 Across 240 matched spectral cases, Chebyshev uses fewer Jacobian-transpose actions than CAT in 164 cases, ties in 42 and uses more in 34 (median Chebyshev/CAT ratio 0.913). CAT uses fixed coefficients; Chebyshev uses scheduled coefficients without extra messages in the synchronous implementation. GMRES uses fewer actions in the large applications but requires global Krylov algebra.
 
-- `reference_results/implicit/` contains compact summaries of the original recurrent/spectral runs, **excluding superseded historical Chebyshev measurements**.
-- `reference_results/` contains compact feed-forward comparisons and the original suite configuration.
-- `revision_results/` contains compact corrected Chebyshev, solver-cost, IGNN and spatial-denoising results. Run `python experiments/verify_revision_results.py` to check the SHA-256 manifest and key values.
-- The **revised Anderson** configurations and CPU timings are documented in [`revision_results/README_anderson_v2.md`](revision_results/README_anderson_v2.md), with `anderson_best_config_extended.csv`, `solver_cost_v2_per_seed.csv`, and `solver_cost_v2_summary.csv`. Old Anderson cells and old memory figures in historical tables are superseded; the v2 state column counts active core arrays, not GMRES's full preallocated buffers or temporary Anderson workspaces.
-- The additional corrected **MNIST/CIFAR-10 Chebyshev** recheck is in [`revision_results/README_vision_chebyshev.md`](revision_results/README_vision_chebyshev.md) with five CSVs and its own manifest. Historical vision Chebyshev/CAT columns are superseded; original CAT/AR training outcomes are unchanged. Run `python experiments/recheck_chebyshev_vision.py --smoke` before reproducing the six-checkpoint comparison.
+- [reference_results/](reference_results/) contains the feed-forward results, recurrent classification summaries, spectral diagnostics and solver comparisons.
+- [revision_results/](revision_results/) contains the Chebyshev comparisons, Anderson configurations, CPU cost measurements, width-scaling data and graph and spatial audits.
+- [Solver configurations and CPU measurements](revision_results/README_anderson_v2.md) documents Table 3 and Supplementary Table S5.
+- [MNIST and CIFAR-10 adjoint comparisons](revision_results/README_vision_chebyshev.md) documents the frozen-model oracle audit.
 
-### Historical numerical results
- Historical spectral and classification CSVs used a Chebyshev recurrence inconsistent with the standard normalized first-kind iteration. The source scripts now use the corrected recurrence; use `revision_results/chebyshev_corrected_*.csv` and vision recheck CSVs, not historical Chebyshev columns. CAT/AR recurrences are unchanged. Eight original fixed-recurrent dataset Chebyshev oracle comparisons are not reported in the manuscript.
-
-### Additional diagnostics (Sections 6.3–6.4, Supplementary Table S8)
+### Frozen-model audits
 - `experiments/recheck_fine_budget_certification.py` reloads a **frozen** `ogbn-arxiv` or spatial-denoising checkpoint and checks the contraction certificate at every iteration for AR, CAT and Chebyshev. This is an offline analysis; the fixed-budget results remain the comparison in Figure 4. Run `python experiments/recheck_fine_budget_certification.py --selftest` and see `experiments/README_fine_budget.md` for frozen-checkpoint commands. The reported offline first-pass counts are given in `revision_results/fine_grid_first_pass.csv`. The spatial audit uses independently retrained checkpoints, not the original image models.
 - `experiments/make_cat_scaling_absolute.py` plots absolute AR and CAT action counts alongside accuracy from `revision_results/width_pairs.csv` (Supplementary Figure S3).
 
@@ -106,8 +102,8 @@ python experiments/make_cat_scaling_absolute.py --input revision_results/width_p
 
 ## Versioned archive
 
-Release `v1.0.0` predates the revised numerical comparisons. A version-specific archive for the revision has not yet been deposited.
+The software version is recorded in `VERSION` and `CITATION.cff`.
 
 ## Citation and license
 
-See `CITATION.cff` and `LICENSE` (MIT). Manuscript drafts, supplementary LaTeX, reviewer correspondence and experimental attempts not reported in the article are deliberately excluded.
+See `CITATION.cff` and `LICENSE` (MIT).
