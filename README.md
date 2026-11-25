@@ -1,10 +1,11 @@
-# CAT — minimal reproducibility code
+# Causal Adjoint Transport (CAT)
 
-Code for the experiments reported in **Local Second-Order Adjoint Dynamics for Implicit Neural Networks**. This repository is intentionally limited to the numerical methods, experiments, small verification tables and tests needed to reproduce the reported comparisons. It is **not** a log of exploratory research.
+Code for the experiments reported in **Local Second-Order Adjoint Dynamics for Implicit Neural Networks**. The repository contains the implementation, experimental scripts, tests and numerical reference tables.
 
 The CAT adjoint is a stationary two-state local iteration for the implicit backward problem `(I - J^T) lambda = b`. The frozen linear iteration belongs to the classical second-degree stationary family; the contribution examined in the article is its local neural realization and its cost relative to first-order Activation Relaxation (AR) under explicit spectral assumptions.
 
-**Scope.** Recurrent classification, an IGNN-style graph classifier on `ogbn-arxiv` and a spatial implicit denoiser are controlled implicit-model applications. They are not three unmodified off-the-shelf DEQ architectures. CAT improves on AR in the tested reciprocal/real-spectrum regime, but is not claimed to outperform corrected Chebyshev or GMRES in general. Offline spectral calibration and terminal error checks have costs; a single terminal check is charged in the reported new application audits.
+## Scope
+ Recurrent classification, an IGNN-style graph classifier on `ogbn-arxiv` and a spatial implicit denoiser are controlled implicit-model applications. They are not three unmodified off-the-shelf DEQ architectures. CAT improves on AR in the tested reciprocal/real-spectrum regime, but is not claimed to outperform Chebyshev or GMRES in general. Offline spectral calibration and terminal error checks have costs; a single terminal check is charged in the reported new application audits.
 
 ## Install and test
 
@@ -26,7 +27,7 @@ Run commands from the repository root. Paths below are output folders and are ig
 |---|---|
 | Feed-forward CAT/AR comparison | `run_npl_suite.py`, `experiments/run_journal_suite.py`, `src/metric_wave/` |
 | Symmetric implicit spectral benchmark | `experiments/run_implicit_spectral_suite.py` |
-| **Corrected** scheduled Chebyshev comparison | `experiments/run_chebyshev_corrected_audit.py` |
+| Scheduled Chebyshev comparison | `experiments/run_chebyshev_corrected_audit.py` |
 | Fixed-recurrent datasets and MNIST/CIFAR-10 | `experiments/run_implicit_dataset_suite.py` |
 | Trained recurrent edges | `experiments/run_trainable_recurrent_control.py` |
 | GMRES, Broyden, Anderson comparison and CPU cost | `experiments/run_nonlocal_solver_reference.py`, `experiments/run_solver_cost_audit.py` |
@@ -51,13 +52,13 @@ For the full procedures use `--profile standard` or `--profile full` as appropri
 python run_npl_suite.py --profile full --jobs 2 --output results/feedforward
 ```
 
-Corrections and revision controls:
+Spectral, scaling and solver-cost experiments:
 
 ```bash
 python experiments/run_chebyshev_corrected_audit.py --out results/chebyshev_corrected
 python experiments/cat_tolerance_study.py --rhos 0.8,0.95,0.99 --tolerances 1e-3,1e-4,1e-5,1e-6,1e-7 --seeds 5 --side 12 --out results/tolerance
 python experiments/run_revision_scaling.py --study width --datasets breast_cancer,digits,synthetic_large --widths 32,64,128,256,512 --seeds 3 --epochs 20 --out results/width_scaling
-python experiments/run_solver_cost_audit.py --seeds 5 --repeats 3 --blas-threads 1 --out results/costs
+python experiments/run_solver_cost_audit.py --seeds 5 --repeats 9 --blas-threads 1 --out results/costs
 ```
 
 Graph model (download `ogbn-arxiv` only from the official OGB dataset provider; official split):
@@ -86,15 +87,16 @@ python experiments/summarize_spatial_denoising.py --root results --prefix spatia
 
 **Chebyshev correction:** Historical spectral and classification CSVs used a Chebyshev recurrence inconsistent with the standard normalized first-kind iteration. The source scripts now use the corrected recurrence; cite the independently checked `revision_results/chebyshev_corrected_*.csv` and vision recheck CSVs, not historical Chebyshev columns. CAT/AR recurrences are unchanged. Eight original fixed-recurrent dataset Chebyshev oracle comparisons are *not* reported in the manuscript pending a full corrected recheck on their original checkpoints.
 
-**Optional per-iteration diagnostics (not yet manuscript results):**
-- `experiments/recheck_fine_budget_certification.py` reloads a **frozen** `ogbn-arxiv` or spatial-denoising checkpoint and checks the contraction certificate at every iteration for AR, CAT and corrected Chebyshev. This is an **offline** analysis; the existing fixed-budget/one-terminal-check results remain the published comparison. Run `python experiments/recheck_fine_budget_certification.py --selftest` and see `experiments/README_fine_budget.md` for frozen-checkpoint commands. No fine-grid experimental counts are claimed until checkpoint runs complete.
+### Additional diagnostics (Sections 6.3–6.4, Supplementary Table S8)
+- `experiments/recheck_fine_budget_certification.py` reloads a **frozen** `ogbn-arxiv` or spatial-denoising checkpoint and checks the contraction certificate at every iteration for AR, CAT and corrected Chebyshev. This is an **offline** analysis; the existing fixed-budget/one-terminal-check results remain the published comparison. Run `python experiments/recheck_fine_budget_certification.py --selftest` and see `experiments/README_fine_budget.md` for frozen-checkpoint commands. The reported offline first-pass counts are given in `revision_results/fine_grid_first_pass.csv`. The spatial audit uses independently retrained checkpoints, not the original image models.
 - `experiments/make_cat_scaling_absolute.py` plots absolute AR and CAT action counts alongside accuracy directly from the original `results/revision_width/width_pairs.csv`. It does not infer missing Chebyshev scaling data.
 
-**Reproducibility limits:** Only compact experimental outputs are distributed here, not full datasets, model checkpoints, image outputs or complete per-step histories. The IGNN and image audits report first passes in predefined iteration-budget grids with one charged terminal residual check; they are not continuously monitored, globally communication-free stopping procedures. CPU times are implementation- and hardware-specific.
+### Reproducibility limits
+ Only compact experimental outputs are distributed here, not full datasets, model checkpoints, image outputs or complete per-step histories. Figure 4 and Table S6 report first passes on predefined budget grids. The separate per-iteration audits count the first passing iteration plus one equivalent terminal action; neither protocol measures continuously monitored distributed stopping. Individual width-training solve convergence flags were not retained. CPU times are implementation- and hardware-specific.
 
 ## Versioned archive
 
-For the revised manuscript, connect this repository to Zenodo **before** publishing the new GitHub release `v1.1.0`. Zenodo will assign the DOI to that frozen release. The older `v1.0.0` predates the revision experiments. Do not cite a DOI until Zenodo has issued it.
+Release `v1.0.0` predates the revised numerical comparisons. A version-specific archive for the revision has not yet been deposited.
 
 ## Citation and license
 
