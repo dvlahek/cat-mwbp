@@ -86,6 +86,10 @@ python experiments/summarize_spatial_denoising.py --root results --prefix spatia
 
 **Chebyshev correction:** Historical spectral and classification CSVs used a Chebyshev recurrence inconsistent with the standard normalized first-kind iteration. The source scripts now use the corrected recurrence; cite the independently checked `revision_results/chebyshev_corrected_*.csv` and vision recheck CSVs, not historical Chebyshev columns. CAT/AR recurrences are unchanged. Eight original fixed-recurrent dataset Chebyshev oracle comparisons are *not* reported in the manuscript pending a full corrected recheck on their original checkpoints.
 
+**Optional per-iteration diagnostics (not yet manuscript results):**
+- `experiments/recheck_fine_budget_certification.py` reloads a **frozen** `ogbn-arxiv` or spatial-denoising checkpoint and checks the contraction certificate at every iteration for AR, CAT and corrected Chebyshev. This is an **offline** analysis; the existing fixed-budget/one-terminal-check results remain the published comparison. Run `python experiments/recheck_fine_budget_certification.py --selftest` and see `experiments/README_fine_budget.md` for frozen-checkpoint commands. No fine-grid experimental counts are claimed until checkpoint runs complete.
+- `experiments/make_cat_scaling_absolute.py` plots absolute AR and CAT action counts alongside accuracy directly from the original `results/revision_width/width_pairs.csv`. It does not infer missing Chebyshev scaling data.
+
 **Reproducibility limits:** Only compact experimental outputs are distributed here, not full datasets, model checkpoints, image outputs or complete per-step histories. The IGNN and image audits report first passes in predefined iteration-budget grids with one charged terminal residual check; they are not continuously monitored, globally communication-free stopping procedures. CPU times are implementation- and hardware-specific.
 
 ## Versioned archive
