@@ -1,0 +1,50 @@
+{
+  "title": "Corrected Chebyshev MNIST/CIFAR-10 frozen-adjoint recheck",
+  "source_script": "experiments/recheck_chebyshev_vision.py",
+  "original_training_script": "experiments/run_implicit_dataset_suite.py",
+  "datasets": [
+    "mnist",
+    "cifar10"
+  ],
+  "training": "Six CAT-bound models, three seeds per dataset, 8,000 examples per seed, width 64, at most 20 epochs; original checkpoints not archived so models deterministically retrained",
+  "audit": "Eight held-out examples per dataset/seed, one identical frozen checkpoint and implicit-gradient target for three solvers",
+  "methods": [
+    "AR-oracle",
+    "CAT-oracle",
+    "Chebyshev-oracle-corrected"
+  ],
+  "stopping": "relative implicit-gradient error <= 1e-6, compared offline against direct solve",
+  "n_adjoint_systems": 48,
+  "n_solver_outputs": 144,
+  "max_relative_implicit_gradient_error": 9.93818025774363e-7,
+  "cat_faster_than_ar": 48,
+  "chebyshev_faster_than_cat": 35,
+  "chebyshev_ties_cat": 13,
+  "dataset_median_chebyshev_over_cat_seed_then_dataset": {
+    "mnist": 0.925,
+    "cifar10": 0.9166666666666666
+  },
+  "mean_cat_checkpoint_test_accuracy": {
+    "mnist": 0.9076666666666666,
+    "cifar10": 0.37283333333333335
+  },
+  "independent_verification": "144 action counts and relative errors independently recomputed using the six uploaded-to-conversation NPZ checkpoint files",
+  "checkpoint_status": "NPZ checkpoints are not stored in this GitHub update; their raw bytes have been retained in the user's local experiment output",
+  "published_csv_sha256_lf_without_final_newline": {
+    "vision_cat_retraining.csv": "05a863f3473a746a3ae17872c2c697a185e2b65978209d87ce90a740423bb0cf",
+    "vision_corrected_chebyshev_actions.csv": "ae515ca6fca4869c4d5d8aea1c4b6d70442208edd9cbc60f0157a0a902f5c3bc",
+    "vision_corrected_chebyshev_pairs.csv": "e7b7c3a8530c18382872506db8b2288523145266f1d6a24cc1b1756f0388d8e0",
+    "vision_corrected_chebyshev_seed_summary.csv": "7d5f29ab8a70f24855405be707abbb23bb4b2ce735cac3b4c5c9b1062fbbfdad",
+    "vision_corrected_chebyshev_dataset_summary.csv": "b6d31f23fed5fb0ab17a05e7920ebfc8948d87d108719a4fb1c4ed55f46fa0a5"
+  },
+  "checkpoint_sha256": {
+    "mnist_seed0_cat_checkpoint.npz": "db8ccabc2672056c719d7c7ac6ac52699e87b4cd1d649d018a3beaeba04250f6",
+    "mnist_seed1_cat_checkpoint.npz": "5040c72236e707a526f1787189cef040809e72543ead05f04efb14286f011832",
+    "mnist_seed2_cat_checkpoint.npz": "4bd5e25c77527f1c73848da30d0233d9afd85e0741c41d83b0fd20a4cb6ee5f1",
+    "cifar10_seed0_cat_checkpoint.npz": "d5b4b3a77d3f01077dab16ab83c9f451ea8a801da104d7bdbf4ef13a64044b6b",
+    "cifar10_seed1_cat_checkpoint.npz": "aff55650c6487ffcac078f41718064de3a6efd3b315cb29f4f69596acf89b40c",
+    "cifar10_seed2_cat_checkpoint.npz": "70f7a8449b60cd0e959751eb1da93bb9e4a12f8ad4d0b6f3d68c4bf59fcaf156"
+  },
+  "reproduce": "python experiments/recheck_chebyshev_vision.py --repo-root . --out results/chebyshev_vision_recheck",
+  "note": "Older MNIST/CIFAR Chebyshev values in historical summary files are superseded only for the Chebyshev comparison; original CAT and AR learning results remain unchanged."
+}
