@@ -159,7 +159,12 @@ def audit(m,x,y,count=8):
             r=rhs-(lam-recur(d*lam,m.rho))
             if k==1: new=lam+alpha*r
             else:
-                beta=(half*alpha/2)**2; na=1/(center-beta/alpha); new=lam+na*r+beta*(lam-prev); alpha=na
+                # Normalized first-kind Chebyshev recurrence.
+                factor=(half**2/2) if k==2 else (half**2/4)
+                new_alpha=1/(center-factor*alpha)
+                momentum=factor*alpha*new_alpha
+                new=lam+new_alpha*r+momentum*(lam-prev)
+                alpha=new_alpha
             prev,lam=lam,new
             if np.linalg.norm(d*lam-eg)/eg_norm<=1e-6: break
         g=d*lam; rows.append({"sample":i,"method":"Cheb-oracle","jtv_actions":k,"rho_actual":float(max(abs(ev.min()),abs(ev.max()))),
