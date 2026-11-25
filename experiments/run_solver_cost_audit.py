@@ -93,13 +93,17 @@ def estimated_state_bytes(method: str,n: int,m:int|None, actions: int):
     vec=8*n
     if method=='AR-oracle': return 2*vec
     if method=='CAT-oracle': return 3*vec
-    if method=='GMRES': return (n*(n+1)+(n+1)*n)*8
+    if method=='GMRES':
+        # Active Arnoldi vectors and Hessenberg entries at k observed actions;
+        # reference solver allocates full n-step arrays, which are much larger.
+        k=min(actions,n)
+        return (n*(k+1)+(k+1)*k)*8
     if method=='Good-Broyden': return 8*(n*n+4*n)
     if method=='Anderson':
-        # Bounded-memory Anderson-m: m saved vectors each of x, f, g,
-        # plus active matrices and KKT solve. Excludes LAPACK workspaces.
-        active=min(m, actions)
-        return 8*(6*n*active + active*active + 5*active)
+        # Three stored history arrays (x, f, g) for last m iterations.
+        # Temporary column-stacks, KKT matrices and LAPACK workspace excluded.
+        active=min(m,actions)
+        return 8*3*n*active
     raise KeyError(method)
 
 
@@ -117,7 +121,7 @@ def config_at(config,problem,rho):
 
 
 def run(args):
-    conf_a=load_config(ROOT/'reference_results/implicit/anderson_best_config.csv')
+    conf_a=load_config(args.anderson_config)
     conf_b=load_config(ROOT/'reference_results/implicit/broyden_best_config.csv')
     rows=[]
     for problem in ('linear','tanh'):
@@ -214,12 +218,13 @@ def run(args):
         'measurement':'Repeated time per solver excluding oracle case generation and offline error audit',
         'n_seeds':args.seeds,'repeats':args.repeats,'blas_threads':args.blas_threads,
         'side':args.side,'rhos':args.rhos,'tolerance':TOL,
-        'memory_warning':'Estimated persistent state is not peak RAM; Python peak excludes native buffers; RSS samples are noisy and process-wide.'
+        'memory_warning':'Algorithmic core arrays at the observed action count, not actual allocated buffer capacity nor peak RAM; GMRES reference preallocates n steps, and Anderson uses temporary least-squares matrices.'
     },indent=2),encoding='utf-8')
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--out',type=Path,default=Path('results/solver_cost_audit'))
+    p.add_argument('--anderson-config',type=Path,default=ROOT/'revision_results/anderson_best_config_extended.csv')
     p.add_argument('--seeds',type=int,default=5)
     p.add_argument('--repeats',type=int,default=3)
     p.add_argument('--blas-threads',type=int,default=1)
