@@ -1,19 +1,5 @@
 #!/usr/bin/env python3
-"""Scientific Reports CAT revision: reproducible scaling and tolerance controls.
-
-Install this file as experiments/run_revision_scaling.py in dvlahek/cat-mwbp.
-It imports the released manuscript implementations without modifying them.
-
-Outputs are new experiments, NOT manuscript results until actually executed.
-
-Notes:
-* The width experiment changes the number of learned parameters in the
-  original trainable local-recurrent architecture (not a large-scale DEQ).
-* The tolerance experiment uses an exact sparse reference solve solely for
-  OFFLINE evaluation. A practical stopping mechanism remains a separate issue.
-* The primary action measure is the number of local J^T v applications, not
-  global floating-point operations or a hardware speedup estimate.
-"""
+"""Width scaling and finite-tolerance experiments for structured recurrent networks."""
 
 from __future__ import annotations
 
