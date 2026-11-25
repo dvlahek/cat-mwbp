@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""Figure 3: absolute AR/CAT backward actions and matched held-out accuracy.
-
-Read original width_pairs.csv; never reconstruct actions from rounded ratios.
-Chebyshev is omitted because it was not part of this width-scaling panel.
-"""
+"""Plot absolute backward action counts and accuracy from matched width experiments."""
 from __future__ import annotations
 import argparse
 from pathlib import Path
