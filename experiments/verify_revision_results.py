@@ -41,6 +41,25 @@ def main():
     for method, actions in (("AR",161),("CAT",46),("Chebyshev",46)):
         assert set(den.loc[den.method == method,"charged_jtv"]) == {actions}, method
     assert len(pd.read_csv(P / "spatial_paired_speedups.csv")) == 3
+    # Revised Anderson results are separate from historical, pre-recalibration outputs.
+    aconf = pd.read_csv(P / "anderson_best_config_extended.csv")
+    assert len(aconf) == 6
+    assert list(aconf.median_actions.astype(int)) == [17,21,24,17,25,29]
+    assert set(aconf.regularization) == {1e-14}
+    cpu = pd.read_csv(P / "solver_cost_v2_per_seed.csv")
+    assert len(cpu) == 25 and set(cpu.seed) == set(range(5))
+    assert (cpu.relative_error < 1e-6).all()
+    csum = pd.read_csv(P / "solver_cost_v2_summary.csv").set_index("method")
+    for method, actions in (("AR-oracle",160),("CAT-oracle",39),
+                            ("GMRES",24),("Good Broyden",29),("Anderson-20",25)):
+        assert int(csum.loc[method,"median_actions"]) == actions
+    assert abs(float(csum.loc["GMRES","core_state_KiB"]) - 32.8125) < 1e-9
+    assert abs(float(csum.loc["Anderson-20","core_state_KiB"]) - 67.5) < 1e-9
+    vis = pd.read_csv(P / "vision_corrected_chebyshev_pairs.csv")
+    assert len(vis) == 48
+    assert (int((vis["AR-oracle"] > vis["CAT-oracle"]).sum()),
+            int((vis["Chebyshev-oracle-corrected"] < vis["CAT-oracle"]).sum()),
+            int((vis["Chebyshev-oracle-corrected"] == vis["CAT-oracle"]).sum())) == (48,35,13)
     print("CAT_MINIMAL_REPRODUCIBILITY_PASS",len(manifest["compact_results"]),"tables")
 
 if __name__ == "__main__":
