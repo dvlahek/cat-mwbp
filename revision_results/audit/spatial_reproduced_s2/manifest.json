@@ -1,0 +1,116 @@
+{
+  "dataset": "skimage.data built-in real photographs/textures",
+  "model": "controlled contractive symmetric five-point spatial equilibrium denoiser",
+  "original_architecture_claim": false,
+  "downloaded_external_data": false,
+  "train_images": [
+    "camera",
+    "coins",
+    "moon",
+    "page",
+    "text",
+    "brick",
+    "grass",
+    "gravel"
+  ],
+  "validation_images": [
+    "clock",
+    "chelsea"
+  ],
+  "test_images": [
+    "retina",
+    "immunohistochemistry",
+    "hubble_deep_field",
+    "cell"
+  ],
+  "split_by_source_image": true,
+  "noise_sigma": 0.12,
+  "validation_selected_gaussian": "gaussian_1.8",
+  "best_validation_psnr": 26.719637894133154,
+  "best_step": 300,
+  "test_psnr_mean_by_method": {
+    "bilateral": 22.927363942775514,
+    "gaussian_0.7": 25.547789229303646,
+    "gaussian_1.2": 26.892512774908187,
+    "gaussian_1.8": 26.22487538652497,
+    "noisy": 19.16809571690956,
+    "spatial_equilibrium": 26.37831854940007
+  },
+  "model_minus_validation_selected_gaussian_db": 0.1534431628750994,
+  "model_surpasses_validation_selected_gaussian": true,
+  "test_best_gaussian_diagnostic": 26.892512774908187,
+  "model_minus_test_best_gaussian_diagnostic": -0.5141942255081169,
+  "split_scope": "Pilot development used separate astronaut/coffee/rocket images. Final test names here were never used during pilot tuning.",
+  "memory_note": "State bytes are algorithmic estimates, not observed process peak RAM.",
+  "stopping_note": "Training and terminal certificate compute global norms, so no fully autonomous local stopping claim.",
+  "solver_audit": {
+    "audit_image": "retina",
+    "forward_steps": 215,
+    "reference_steps": 241,
+    "reference_relative_bound": 1.9829120072715545e-09,
+    "first_pass_methods": [
+      "AR",
+      "CAT",
+      "Chebyshev",
+      "GMRES"
+    ],
+    "all_methods_certified": true
+  },
+  "model_params": 11953,
+  "learned_params": 11953,
+  "device": "cpu",
+  "torch_version": "2.9.1+cpu",
+  "scipy_version": "1.16.3",
+  "scikit_image_version": "0.26.0",
+  "numpy_version": "2.5.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "checkpoint_sha256": "c47466fb3bd8010ed33b8f66b6458403517afeb727a33bb68a292c9253866e21",
+  "config": {
+    "out": "results\\spatial_reproduced_s2",
+    "smoke": false,
+    "seed": 2,
+    "steps": 300,
+    "side": 80,
+    "patch": 48,
+    "eval_side": 64,
+    "audit_side": 48,
+    "width": 24,
+    "rho": 0.95,
+    "center_weight": 0.35,
+    "sigma": 0.12,
+    "lr": 0.002,
+    "weight_decay": 1e-05,
+    "threads": 2,
+    "eval_every": 25,
+    "max_forward": 1000,
+    "forward_tol": 2e-05,
+    "max_backward": 500,
+    "backward_tol": 1e-05,
+    "max_reference": 2000,
+    "reference_tol": 2e-09,
+    "certified_tol": 1e-05,
+    "gmres_restart": 15,
+    "budgets": "10,15,20,25,30,35,40,45,50,60,80,100,120,160,200",
+    "repeats": 3,
+    "train_names": [
+      "camera",
+      "coins",
+      "moon",
+      "page",
+      "text",
+      "brick",
+      "grass",
+      "gravel"
+    ],
+    "valid_names": [
+      "clock",
+      "chelsea"
+    ],
+    "test_names": [
+      "retina",
+      "immunohistochemistry",
+      "hubble_deep_field",
+      "cell"
+    ]
+  }
+}

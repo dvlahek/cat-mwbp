@@ -1,0 +1,55 @@
+{
+  "checkpoint_sha256": "1d931fe429e70c0619988b36e6f75e9cde244764e6ac9daeb105d6924cc0fe9f",
+  "method": "per-iteration offline diagnostic on frozen checkpoint",
+  "measure": "first relative-adjoint certificate with one conceptual terminal JTv",
+  "not_claimed": "continuously monitored online stopping or hardware speedup",
+  "source_metadata": {
+    "kind": "graph",
+    "dataset": "ogbn-arxiv",
+    "seed": 0,
+    "width": 32,
+    "rho": 0.95,
+    "graph_meta": {
+      "num_nodes": 169343,
+      "num_edges_undirected_with_diagonal": 2484941,
+      "num_features": 128,
+      "num_classes": 40,
+      "n_train": 90941,
+      "n_valid": 29799,
+      "n_test": 48603
+    },
+    "scores": {
+      "train": 0.542417585849762,
+      "valid": 0.550488293170929,
+      "test": 0.5277246236801147
+    },
+    "forward_iterations": 47,
+    "reference_iterations": 136,
+    "reference_bound": 1.98168724141572e-08
+  },
+  "old_grid_validation": null,
+  "configuration": {
+    "kind": "graph",
+    "checkpoint": "results\\ignn_arxiv_w32_e20_s0\\trained_model.pt",
+    "out": "results\\ignn_fine_e20_s0",
+    "old_grid": null,
+    "max_budget": 100,
+    "certified_tol": 1e-05,
+    "device": "cpu",
+    "data_root": "data/ogb",
+    "sparse_format": "csr",
+    "trust_ogb_cache": true,
+    "eval_forward_tol": 2e-07,
+    "max_forward": 700,
+    "reference_tol": 2e-08,
+    "max_reference": 2500,
+    "audit_side": 48,
+    "sigma": 0.12,
+    "threads": 2,
+    "selftest": false,
+    "seed": 0,
+    "width": 32,
+    "rho": 0.95,
+    "smoke": false
+  }
+}

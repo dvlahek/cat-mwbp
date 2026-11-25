@@ -1,0 +1,48 @@
+{
+  "checkpoint_sha256": "c47466fb3bd8010ed33b8f66b6458403517afeb727a33bb68a292c9253866e21",
+  "method": "per-iteration offline diagnostic on frozen checkpoint",
+  "measure": "first relative-adjoint certificate with one conceptual terminal JTv",
+  "not_claimed": "continuously monitored online stopping or hardware speedup",
+  "source_metadata": {
+    "kind": "spatial",
+    "dataset": "skimage.data held-out denoising",
+    "seed": 2,
+    "image": "retina",
+    "width": 24,
+    "rho": 0.95,
+    "center_weight": 0.35,
+    "audit_side": 48,
+    "sigma": 0.12,
+    "forward_iterations": 215,
+    "reference_iterations": 241,
+    "reference_bound": 1.9829120072715545e-09
+  },
+  "old_grid_validation": {
+    "original_grid_rows_checked": 30,
+    "all_pass_flags_match": true
+  },
+  "configuration": {
+    "kind": "spatial",
+    "checkpoint": "results\\spatial_reproduced_s2\\trained_model.pt",
+    "out": "results\\spatial_fine_s2",
+    "old_grid": "results\\spatial_reproduced_s2\\solver_budgets.csv",
+    "max_budget": 200,
+    "certified_tol": 1e-05,
+    "device": "cpu",
+    "data_root": "data/ogb",
+    "sparse_format": "csr",
+    "trust_ogb_cache": false,
+    "eval_forward_tol": 2e-07,
+    "max_forward": 1000,
+    "reference_tol": 2e-09,
+    "max_reference": 2000,
+    "audit_side": 48,
+    "sigma": 0.12,
+    "threads": 2,
+    "selftest": false,
+    "seed": 2,
+    "width": 24,
+    "rho": 0.95,
+    "center_weight": 0.35
+  }
+}
