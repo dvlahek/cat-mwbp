@@ -1,0 +1,6 @@
+method,median_actions,median_cpu_ms,core_state_KiB,max_error
+AR-oracle,160,1.911283,2.25,9.68986617782e-07
+Anderson-20,25,1.627156,67.5,9.78054342806e-07
+CAT-oracle,39,0.473832,3.375,9.80019725216e-07
+GMRES,24,1.867137,32.8125,8.66199962076e-07
+Good Broyden,29,1.47643,166.5,8.91951270062e-07
