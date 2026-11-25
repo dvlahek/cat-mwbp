@@ -86,9 +86,10 @@ def solve_cheb(rhs, exact, jtv, mu, L, max_steps, d=None):
         if k == 1:
             new = x + alpha*r
         else:
-            beta = (half*alpha/2)**2
-            new_alpha = 1/(center - beta/alpha)
-            new = x + new_alpha*r + beta*(x-prev)
+            factor = (half**2/2) if k==2 else (half**2/4)
+            new_alpha = 1/(center - factor*alpha)
+            momentum = factor*alpha*new_alpha
+            new = x + new_alpha*r + momentum*(x-prev)
             alpha = new_alpha
         prev, x = x, new
         err = np.linalg.norm(x-exact)/(np.linalg.norm(exact)+1e-30)
