@@ -101,9 +101,9 @@ See [per-iteration certification](experiments/README_fine_budget.md) for the off
 
 ## Reproducibility
 
-The repository contains compact numerical tables, 2,700 per-iteration audit records, manifests and three independently retrained spatial checkpoints. The original graph, spatial and vision checkpoint binaries are not included. Public datasets are obtained separately.
+The repository contains compact numerical tables, 2,700 per-iteration audit records, manifests and three independently retrained spatial checkpoints. All reported spatial comparisons use the three archived, independently retrained checkpoints. The earlier spatial checkpoints and the original graph and vision binaries are not included. Public datasets are obtained separately.
 
-Figure 4 and Table S6 use predefined iteration budgets with one charged terminal residual evaluation. The offline per-iteration audits report the first passing iteration plus one equivalent terminal action; they do not measure continuously monitored stopping costs. Individual width-training solve convergence flags were not retained. CPU timings depend on hardware and software versions.
+Figure 4 and Table S6 use predefined iteration budgets with one charged terminal residual evaluation. The spatial summary tables and per-iteration audits refer to the same archived models. The offline per-iteration audits report the first passing iteration plus one equivalent terminal action; they do not measure continuously monitored stopping costs. Individual width-training solve convergence flags were not retained. CPU timings depend on hardware and software versions.
 
 ## Citation and license
 
