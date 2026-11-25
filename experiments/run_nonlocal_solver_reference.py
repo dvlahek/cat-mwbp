@@ -150,7 +150,7 @@ def main():
     seeds=(0,1) if a.quick else tuple(range(5))
     and_mem=(5,20) if a.quick else (3,5,10,20,50)
     and_beta=(.8,1.) if a.quick else (.5,.8,1.)
-    and_reg=(1e-10,1e-6) if a.quick else (1e-10,1e-8,1e-6,1e-4,1e-2)
+    and_reg=(1e-14,1e-12,1e-10,1e-6) if a.quick else (1e-14,1e-12,1e-10,1e-8,1e-6,1e-4,1e-2)
     broy_scale=(.5,1.,1.5) if a.quick else (.25,.5,1.,1.5,2.)
     broy_damp=(.8,1.) if a.quick else (.5,.8,1.)
     table=[]
