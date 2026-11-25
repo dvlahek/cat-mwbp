@@ -79,6 +79,8 @@ python experiments/summarize_spatial_denoising.py --root results --prefix spatia
 
 ## Numerical reference tables
 
+Across 240 matched spectral cases, Chebyshev uses fewer Jacobian-transpose actions than CAT in 164 cases, ties in 42 and uses more in 34 (median Chebyshev/CAT ratio 0.913). CAT uses fixed coefficients; Chebyshev uses scheduled coefficients without extra messages in the synchronous implementation. GMRES uses fewer actions in the large applications but requires global Krylov algebra.
+
 - `reference_results/implicit/` contains compact summaries of the original recurrent/spectral runs, **excluding superseded historical Chebyshev measurements**.
 - `reference_results/` contains compact feed-forward comparisons and the original suite configuration.
 - `revision_results/` contains compact corrected Chebyshev, solver-cost, IGNN and spatial-denoising results. Run `python experiments/verify_revision_results.py` to check the SHA-256 manifest and key values.
@@ -88,7 +90,7 @@ python experiments/summarize_spatial_denoising.py --root results --prefix spatia
 **Chebyshev correction:** Historical spectral and classification CSVs used a Chebyshev recurrence inconsistent with the standard normalized first-kind iteration. The source scripts now use the corrected recurrence; cite the independently checked `revision_results/chebyshev_corrected_*.csv` and vision recheck CSVs, not historical Chebyshev columns. CAT/AR recurrences are unchanged. Eight original fixed-recurrent dataset Chebyshev oracle comparisons are *not* reported in the manuscript pending a full corrected recheck on their original checkpoints.
 
 ### Additional diagnostics (Sections 6.3–6.4, Supplementary Table S8)
-- `experiments/recheck_fine_budget_certification.py` reloads a **frozen** `ogbn-arxiv` or spatial-denoising checkpoint and checks the contraction certificate at every iteration for AR, CAT and corrected Chebyshev. This is an **offline** analysis; the existing fixed-budget/one-terminal-check results remain the published comparison. Run `python experiments/recheck_fine_budget_certification.py --selftest` and see `experiments/README_fine_budget.md` for frozen-checkpoint commands. The reported offline first-pass counts are given in `revision_results/fine_grid_first_pass.csv`. The spatial audit uses independently retrained checkpoints, not the original image models.
+- `experiments/recheck_fine_budget_certification.py` reloads a **frozen** `ogbn-arxiv` or spatial-denoising checkpoint and checks the contraction certificate at every iteration for AR, CAT and corrected Chebyshev. This is an **offline** analysis; the fixed-budget results remain the comparison in Figure 4. Run `python experiments/recheck_fine_budget_certification.py --selftest` and see `experiments/README_fine_budget.md` for frozen-checkpoint commands. The reported offline first-pass counts are given in `revision_results/fine_grid_first_pass.csv`. The spatial audit uses independently retrained checkpoints, not the original image models.
 - `experiments/make_cat_scaling_absolute.py` plots absolute AR and CAT action counts alongside accuracy directly from the original `results/revision_width/width_pairs.csv`. It does not infer missing Chebyshev scaling data.
 
 ### Reproducibility limits
