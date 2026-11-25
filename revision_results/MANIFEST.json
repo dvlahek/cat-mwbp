@@ -3,8 +3,7 @@
   "source_archives_sha256": {
     "allresults.zip": "d8879eb8a27c9afa7058dccb1e4ae238f92faa21ec6f5f589315a5dc7943fe72",
     "ignn_postcheck_all.zip": "bcc52ae13c7ae85175de843a2e097027731eb803bcbe37322282fdae1e469066",
-    "ignn_three_seeds.zip": "731a771687c7371f6dd3645543bbb0196a3813012d1fb3313e5510f56cffcac6",
-    "CAT_spatial_denoising_three_seeds_final.zip": "a2b0dabbc1fff9f67af5408202b9968b5b32bfaee99ca7cca1bf4bd6aa0c7c60"
+    "ignn_three_seeds.zip": "731a771687c7371f6dd3645543bbb0196a3813012d1fb3313e5510f56cffcac6"
   },
   "compact_results": {
     "chebyshev_corrected_pairs.csv": {
@@ -28,21 +27,22 @@
       "bytes": 350
     },
     "spatial_certified_solver_summary.csv": {
-      "sha256": "e5af5127833766eb3863bc2d519609b5071f8d95937483e4e3f6b1fcdb40bd5c",
-      "bytes": 241
+      "sha256": "a9a79cfe7e8a60ea4732493b7e988e827b0d7676af4dd0fca1daa33a16bc4bac",
+      "bytes": 248
     },
     "spatial_first_certified_by_seed.csv": {
-      "sha256": "a97cea898564185b1d783bf7b520fae7d94bb3dc0478d5832e71201ffb85beac",
-      "bytes": 2791
+      "sha256": "268741d311a1a1481bf5791e4ef1d6ca5cb4000dbaf821c5a5d29a06974e906e",
+      "bytes": 2906
     },
     "spatial_mean_test_psnr.csv": {
-      "sha256": "25b50c9965e214292682c5c8db1dc81498368c47560116e25c9b3ef284346d4e",
-      "bytes": 617
+      "sha256": "0b4ddada69752fa3ad40c80961c1dcdacc2a2397629fd40f42ae9fd4474d879f",
+      "bytes": 615
     },
     "spatial_paired_speedups.csv": {
-      "sha256": "b4da8085365c287f22de32e118e9c70fd6bd63ea0d9d91c8c4d8bdf9cb2c310a",
-      "bytes": 115
+      "sha256": "ac3e10294b00e9e516319ccc34da0956719399cc6fdff82d13841216a2aea41a",
+      "bytes": 129
     }
   },
-  "accuracy_note": "Fixed-budget certification includes one terminal Jacobian-transpose action and norm reductions. CPU timings are hardware-dependent."
+  "accuracy_note": "Fixed-budget certification includes one terminal Jacobian-transpose action and norm reductions. CPU timings are hardware-dependent.",
+  "spatial_source": "audit/spatial_reproduced_s0 through s2; source file hashes in AUDIT_SHA256.json"
 }
