@@ -81,6 +81,7 @@ python experiments/summarize_spatial_denoising.py --root results --prefix spatia
 - `reference_results/implicit/` contains compact summaries of the original recurrent/spectral runs, **excluding superseded historical Chebyshev measurements**.
 - `reference_results/` contains compact feed-forward comparisons and the original suite configuration.
 - `revision_results/` contains compact corrected Chebyshev, solver-cost, IGNN and spatial-denoising results. Run `python experiments/verify_revision_results.py` to check the SHA-256 manifest and key values.
+- The additional corrected **MNIST/CIFAR-10 Chebyshev** recheck is in [`revision_results/README_vision_chebyshev.md`](revision_results/README_vision_chebyshev.md) with five CSVs and its own manifest. Historical vision Chebyshev/CAT columns are superseded; original CAT/AR training outcomes are unchanged. Run `python experiments/recheck_chebyshev_vision.py --smoke` before reproducing the six-checkpoint comparison.
 
 **Chebyshev correction:** The original `run_implicit_spectral_suite.py` includes historical Chebyshev code whose coefficients are inconsistent with the standard normalized first-kind recurrence. Do **not** cite Chebyshev counts from its historical output. The corrected comparison is `run_chebyshev_corrected_audit.py`, whose polynomial-identity self-test checks the recurrence. This correction does not change the original CAT/AR recurrences.
 
