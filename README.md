@@ -28,7 +28,7 @@ Install PyTorch for the target device using the [official installation instructi
 
 | Manuscript | Numerical data |
 |---|---|
-| Table 2, Section 6.1 | [Spectral benchmark](reference_results/implicit/) |
+| Table 2, Section 6.1 | [Spectral experiment](experiments/run_implicit_spectral_suite.py) (regenerate with `--profile standard`) |
 | Table 3 | [Solver comparison](reference_results/implicit/nonlocal_solver_reference.csv) |
 | Table 4, Figure 2 | [Classification](reference_results/implicit/core_dataset_summary.csv), [spectral prediction](reference_results/implicit/theory_vs_measured_summary.csv) |
 | Table 5 | [Trainable recurrent models](reference_results/implicit/trainable_recurrent_summary.csv) |
@@ -36,7 +36,7 @@ Install PyTorch for the target device using the [official installation instructi
 | Figure 4, Table S6 | [Graph](revision_results/ignn_first_certified_by_seed.csv), [spatial](revision_results/spatial_first_certified_by_seed.csv) |
 | Tables S1–S2 | [Directed spectra](reference_results/implicit/directed_spectrum_summary.csv), [ellipse calibration](reference_results/implicit/complex_spectrum_oracle_summary.csv) |
 | Table S3 | [Feed-forward comparisons](reference_results/aggregate_comparisons.csv) |
-| Table S4 | [Chebyshev comparison](revision_results/chebyshev_corrected_summary.csv) |
+| Table S4 | [Chebyshev pairs](revision_results/chebyshev_corrected_pairs.csv), [summary](revision_results/chebyshev_corrected_summary.csv) |
 | Table S5 | [CPU and state costs](revision_results/solver_cost_v2_summary.csv) |
 | Table S7 | [Image quality](revision_results/spatial_mean_test_psnr.csv) |
 | Table S8, Section 6.4 | [Per-iteration results](revision_results/fine_grid_first_pass.csv), [audit archive](revision_results/audit/) |
