@@ -1,5 +1,5 @@
 {
-  "description": "Compact derived summaries supporting the 2026-11 CAT manuscript revision. Original full runs, checkpoint binaries, image outputs and measurement histories are not archived in GitHub. See Zenodo submission archive when deposited.",
+  "description": "Numerical reference tables for Local Second-Order Adjoint Dynamics for Implicit Neural Networks.",
   "source_archives_sha256": {
     "allresults.zip": "d8879eb8a27c9afa7058dccb1e4ae238f92faa21ec6f5f589315a5dc7943fe72",
     "ignn_postcheck_all.zip": "bcc52ae13c7ae85175de843a2e097027731eb803bcbe37322282fdae1e469066",
@@ -14,10 +14,6 @@
     "chebyshev_corrected_summary.csv": {
       "sha256": "166c33e6d21884f8c0283cfd7c123fb56da1d372c9b518aa282cd065184b2aa7",
       "bytes": 2748
-    },
-    "solver_cost_summary.csv": {
-      "sha256": "7907cec1b32a6b666f2d5a562191b205371ee0dcebf5ff1b995b732372ffe65d",
-      "bytes": 2044
     },
     "ignn_certification_summary.csv": {
       "sha256": "111720399eb8f496ab4b610989e8a02137b2ee2640d9cc5084dd145358f8811f",
@@ -48,5 +44,5 @@
       "bytes": 115
     }
   },
-  "accuracy_note": "Fixed-budget first-certification, one extra J^T v and norm reductions. CPU timing is implementation specific. Denoising test metrics report honest non-winning seed; Chebyshev is corrected 2026-11 and v1.0.0 historical controls are not corrected."
+  "accuracy_note": "Fixed-budget certification includes one terminal Jacobian-transpose action and norm reductions. CPU timings are hardware-dependent."
 }
