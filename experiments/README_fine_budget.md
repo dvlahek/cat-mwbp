@@ -1,45 +1,42 @@
-# Fine-grid certification (optional offline diagnostic)
+# Per-iteration certification
 
-This is **not** a replacement for the fixed-budget + terminal-check Figure 4 protocol. It tests on the original frozen checkpoint after **each** iteration. The first passing iteration k is reported alongside the *equivalent separately charged* fixed-budget cost k+1 Jt actions. Intermediate checks are not charged as an online monitoring algorithm, so do not describe these numbers as autonomous distributed stopping costs.
+The offline audit evaluates the relative adjoint-error certificate after every iteration on a frozen model. The reported equivalent action count is the first passing iteration plus one terminal Jacobian-transpose action. It excludes the cost of intermediate diagnostic checks.
 
-Run from the repository root:
+Figure 4 and Table S6 use the original predefined budget grids. The graph audit uses the original graph models; Table S8 uses three independently retrained spatial models.
 
-```powershell
-git pull origin main
-py experiments/recheck_fine_budget_certification.py --selftest
+## Archived results
 
-Get-ChildItem results -Recurse -Filter trained_model.pt | Select-Object -ExpandProperty FullName
-Get-ChildItem results -Recurse -Filter width_pairs.csv | Select-Object -ExpandProperty FullName
+The trajectories, first-pass tables, manifests and retrained spatial checkpoints are in [revision_results/audit](../revision_results/audit/).
+
+From the repository root:
+
+```bash
+python experiments/verify_archived_audits.py
+python experiments/recheck_fine_budget_certification.py --selftest
 ```
 
-Graph checkpoint output (normally `results/ignn_s0/trained_model.pt`; repeat s0, s1 and s2):
+## Graph
 
-```powershell
-foreach ($s in 0..2) {
-    py experiments/recheck_fine_budget_certification.py --kind graph --checkpoint "results/ignn_s$s/trained_model.pt" --data-root data/ogb --device cpu --max-budget 100 --out "results/ignn_fine_s$s"
-}
+The original graph checkpoints and official OGB dataset are required to repeat the frozen-model audit. The checkpoint binaries are not included in the repository. Example for seed 0:
+
+```bash
+python experiments/recheck_fine_budget_certification.py --kind graph --checkpoint results/ignn_s0/trained_model.pt --data-root data/ogb --device cpu --max-budget 100 --out results/ignn_fine_s0
 ```
 
-For source-verified OGB caches that require the old PyTorch load behavior, add `--trust-ogb-cache` only after verifying the provenance. Provide the original graph postcheck `solver_budgets_charged.csv` as `--old-grid <path>` to verify coarse pass flags before comparing new numbers.
+Repeat for seeds 1 and 2. The optional `--old-grid` argument accepts the corresponding postcheck CSV. Use `--trust-ogb-cache` only with a trusted, locally verified OGB cache.
 
-Spatial denoising checkpoint output (normally `results/spatial_denoising_s0/trained_model.pt`; repeat s0, s1, s2):
+## Spatial denoising
 
-```powershell
-foreach ($s in 0..2) {
-    py experiments/recheck_fine_budget_certification.py --kind spatial --checkpoint "results/spatial_denoising_s$s/trained_model.pt" --max-budget 200 --device cpu --out "results/spatial_fine_s$s" --old-grid "results/spatial_denoising_s$s/solver_budgets.csv"
-}
+The archived retrained checkpoint can be audited directly. Example for seed 0:
+
+```bash
+python experiments/recheck_fine_budget_certification.py --kind spatial --checkpoint revision_results/audit/spatial_reproduced_s0/trained_model.pt --old-grid revision_results/audit/spatial_reproduced_s0/solver_budgets.csv --device cpu --max-budget 200 --out results/spatial_fine_s0
 ```
 
-The spatial calculation uses the same held-out `TEST_NAMES[0]`, noise seed, model, and derivative of decoder loss as the original `solver_audit`. It does not retrain anything.
+Repeat for seeds 1 and 2. The output contains `fine_grid_all_steps.csv`, `fine_grid_first_pass.csv` and `manifest.json`. Retraining instructions are in the root README. The original spatial models are unavailable.
 
-Each output directory contains `fine_grid_all_steps.csv`, `fine_grid_first_pass.csv`, and `manifest.json` (with checkpoint SHA256). If an old-grid comparison disagrees, investigate rather than overriding it. The graph diagnostic requires the original OGB data/split and checkpoint; the spatial diagnostic requires the original frozen checkpoint. Neither is archived in the compact GitHub results.
+## Supplementary Figure S3
 
-Figure 3 absolute actions can be regenerated, if the original width CSV is present:
-
-```powershell
-py experiments/make_cat_scaling_absolute.py --input results/revision_width/width_pairs.csv --output results/revision_width/cat_parameter_scaling_absolute
+```bash
+python experiments/make_cat_scaling_absolute.py --input revision_results/width_pairs.csv --output results/figureS3
 ```
-
-The script reads absolute AR and CAT backward actions from `width_pairs.csv`; it does not invent a Chebyshev width comparison.
-
-**Do not change the manuscript's Figure 4 ratios or CAT/Chebyshev comparisons until the true checkpoint-based numbers and original-grid cross-checks are available.**
