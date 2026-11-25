@@ -1,13 +1,10 @@
 # Causal Adjoint Transport (CAT)
 
-Code for the experiments reported in **Local Second-Order Adjoint Dynamics for Implicit Neural Networks**. The repository contains the implementation, experimental scripts, tests and numerical reference tables.
+Research code for *Local Second-Order Adjoint Dynamics for Implicit Neural Networks*.
 
-The CAT adjoint is a stationary two-state local iteration for the implicit backward problem `(I - J^T) lambda = b`. The frozen linear iteration belongs to the classical second-degree stationary family; the contribution examined in the article is its local neural realization and its cost relative to first-order Activation Relaxation (AR) under explicit spectral assumptions.
+CAT applies a fixed-coefficient, second-degree stationary iteration to the implicit adjoint system `(I - J^T) lambda = b`. The experiments compare local backward action counts, predictive outcomes and solver costs in structured contractive implicit networks.
 
-## Scope
- Recurrent classification, an IGNN-style graph classifier on `ogbn-arxiv` and a spatial implicit denoiser are controlled implicit-model applications. They are not three unmodified off-the-shelf DEQ architectures. CAT improves on AR in the tested reciprocal/real-spectrum regime, but is not claimed to outperform Chebyshev or GMRES in general. Offline spectral calibration and terminal error checks have costs; a single terminal check is charged in the reported new application audits.
-
-## Install and test
+## Installation and verification
 
 Python with NumPy, SciPy, pandas, scikit-learn and Matplotlib:
 
@@ -15,9 +12,10 @@ Python with NumPy, SciPy, pandas, scikit-learn and Matplotlib:
 python -m pip install -r requirements.txt
 python -m unittest discover -s tests -v
 python experiments/verify_revision_results.py
+python experiments/verify_archived_audits.py
 ```
 
-The graph and image experiments additionally require PyTorch, `ogb` (graph), `scikit-image` and `Pillow` (images). CPU timing and memory controls require `threadpoolctl` and `psutil`. Install matching versions appropriate for the machine, and document them when reproducing timings. Dataset downloads and trained weights are **not** committed.
+The graph and image experiments additionally require PyTorch, `ogb` (graph), `scikit-image` and `Pillow` (images). CPU timing and memory controls require `threadpoolctl` and `psutil`. Install matching versions appropriate for the machine, and document them when reproducing timings. Public datasets are downloaded separately. The three retrained spatial checkpoints are included in the audit archive.
 
 ## Reproduce the reported experiments
 
@@ -57,8 +55,8 @@ Spectral, scaling and solver-cost experiments:
 ```bash
 python experiments/run_chebyshev_corrected_audit.py --out results/chebyshev_corrected
 python experiments/cat_tolerance_study.py --rhos 0.8,0.95,0.99 --tolerances 1e-3,1e-4,1e-5,1e-6,1e-7 --seeds 5 --side 12 --out results/tolerance
-python experiments/run_revision_scaling.py --study width --datasets breast_cancer,digits,synthetic_large --widths 32,64,128,256,512 --seeds 3 --epochs 20 --out results/width_scaling
-python experiments/run_solver_cost_audit.py --seeds 5 --repeats 9 --blas-threads 1 --out results/costs
+python experiments/run_revision_scaling.py --study width --datasets breast_cancer,digits,synthetic_large --widths 32,64,128,256,512 --seeds 3 --epochs 20 --out results/revision_width
+python experiments/run_solver_cost_audit.py --anderson-config revision_results/anderson_best_config_extended.csv --seeds 5 --repeats 9 --blas-threads 1 --out results/costs
 ```
 
 Graph model (download `ogbn-arxiv` only from the official OGB dataset provider; official split):
@@ -77,7 +75,7 @@ python experiments/run_spatial_implicit_denoising.py --seed 0 --steps 300 --side
 python experiments/summarize_spatial_denoising.py --root results --prefix spatial_denoising_s --out results/spatial_denoising_summary
 ```
 
-## Numerical reference tables
+## Results and archived data
 
 Across 240 matched spectral cases, Chebyshev uses fewer Jacobian-transpose actions than CAT in 164 cases, ties in 42 and uses more in 34 (median Chebyshev/CAT ratio 0.913). CAT uses fixed coefficients; Chebyshev uses scheduled coefficients without extra messages in the synchronous implementation. GMRES uses fewer actions in the large applications but requires global Krylov algebra.
 
@@ -87,14 +85,24 @@ Across 240 matched spectral cases, Chebyshev uses fewer Jacobian-transpose actio
 - The **revised Anderson** configurations and CPU timings are documented in [`revision_results/README_anderson_v2.md`](revision_results/README_anderson_v2.md), with `anderson_best_config_extended.csv`, `solver_cost_v2_per_seed.csv`, and `solver_cost_v2_summary.csv`. Old Anderson cells and old memory figures in historical tables are superseded; the v2 state column counts active core arrays, not GMRES's full preallocated buffers or temporary Anderson workspaces.
 - The additional corrected **MNIST/CIFAR-10 Chebyshev** recheck is in [`revision_results/README_vision_chebyshev.md`](revision_results/README_vision_chebyshev.md) with five CSVs and its own manifest. Historical vision Chebyshev/CAT columns are superseded; original CAT/AR training outcomes are unchanged. Run `python experiments/recheck_chebyshev_vision.py --smoke` before reproducing the six-checkpoint comparison.
 
-**Chebyshev correction:** Historical spectral and classification CSVs used a Chebyshev recurrence inconsistent with the standard normalized first-kind iteration. The source scripts now use the corrected recurrence; cite the independently checked `revision_results/chebyshev_corrected_*.csv` and vision recheck CSVs, not historical Chebyshev columns. CAT/AR recurrences are unchanged. Eight original fixed-recurrent dataset Chebyshev oracle comparisons are *not* reported in the manuscript pending a full corrected recheck on their original checkpoints.
+### Historical numerical results
+ Historical spectral and classification CSVs used a Chebyshev recurrence inconsistent with the standard normalized first-kind iteration. The source scripts now use the corrected recurrence; use `revision_results/chebyshev_corrected_*.csv` and vision recheck CSVs, not historical Chebyshev columns. CAT/AR recurrences are unchanged. Eight original fixed-recurrent dataset Chebyshev oracle comparisons are not reported in the manuscript.
 
 ### Additional diagnostics (Sections 6.3–6.4, Supplementary Table S8)
-- `experiments/recheck_fine_budget_certification.py` reloads a **frozen** `ogbn-arxiv` or spatial-denoising checkpoint and checks the contraction certificate at every iteration for AR, CAT and corrected Chebyshev. This is an **offline** analysis; the fixed-budget results remain the comparison in Figure 4. Run `python experiments/recheck_fine_budget_certification.py --selftest` and see `experiments/README_fine_budget.md` for frozen-checkpoint commands. The reported offline first-pass counts are given in `revision_results/fine_grid_first_pass.csv`. The spatial audit uses independently retrained checkpoints, not the original image models.
-- `experiments/make_cat_scaling_absolute.py` plots absolute AR and CAT action counts alongside accuracy directly from the original `results/revision_width/width_pairs.csv`. It does not infer missing Chebyshev scaling data.
+- `experiments/recheck_fine_budget_certification.py` reloads a **frozen** `ogbn-arxiv` or spatial-denoising checkpoint and checks the contraction certificate at every iteration for AR, CAT and Chebyshev. This is an offline analysis; the fixed-budget results remain the comparison in Figure 4. Run `python experiments/recheck_fine_budget_certification.py --selftest` and see `experiments/README_fine_budget.md` for frozen-checkpoint commands. The reported offline first-pass counts are given in `revision_results/fine_grid_first_pass.csv`. The spatial audit uses independently retrained checkpoints, not the original image models.
+- `experiments/make_cat_scaling_absolute.py` plots absolute AR and CAT action counts alongside accuracy from `revision_results/width_pairs.csv` (Supplementary Figure S3).
 
 ### Reproducibility limits
- Only compact experimental outputs are distributed here, not full datasets, model checkpoints, image outputs or complete per-step histories. Figure 4 and Table S6 report first passes on predefined budget grids. The separate per-iteration audits count the first passing iteration plus one equivalent terminal action; neither protocol measures continuously monitored distributed stopping. Individual width-training solve convergence flags were not retained. CPU times are implementation- and hardware-specific.
+The archive includes the full graph and spatial audit trajectories and three retrained spatial checkpoints. Original spatial checkpoints and graph checkpoint binaries are not included. Figure 4 and Table S6 report first passes on predefined budget grids. The separate per-iteration audits count the first passing iteration plus one equivalent terminal action; neither protocol measures continuously monitored distributed stopping. Individual width-training solve convergence flags were not retained. CPU times are implementation- and hardware-specific.
+
+### Archived audits and figures
+
+The audit archive is in [revision_results/audit/](revision_results/audit/). It contains 2,700 trajectory records, first-pass summaries, manifests and three retrained spatial checkpoints. The SHA-256 checks are performed by `verify_archived_audits.py`.
+
+```bash
+python experiments/make_cat_scaling_compact.py --input revision_results/width_pairs.csv --output results/figure3
+python experiments/make_cat_scaling_absolute.py --input revision_results/width_pairs.csv --output results/figureS3
+```
 
 ## Versioned archive
 
