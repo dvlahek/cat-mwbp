@@ -1,0 +1,46 @@
+{
+  "dataset": "ogbn-arxiv",
+  "seed": 1,
+  "graph": {
+    "num_nodes": 169343,
+    "num_edges_undirected_with_diagonal": 2484941,
+    "num_features": 128,
+    "num_classes": 40,
+    "n_train": 90941,
+    "n_valid": 29799,
+    "n_test": 48603
+  },
+  "scores": {
+    "train": 0.695868730545044,
+    "valid": 0.6796537041664124,
+    "test": 0.6638273596763611
+  },
+  "checkpoint_sha256": "d6093ca8f920081c3a8ac88e48dea8d5092233caae5be5b1587c31ae81ec5e18",
+  "checkpoint": "results\\ignn_arxiv_w32_e200_s1\\trained_model.pt",
+  "device": "cpu",
+  "torch_version": "2.9.1+cpu",
+  "reference_iterations": 181,
+  "reference_relative_error_bound": 1.938133169033249e-08,
+  "forward_iterations": 76,
+  "charge_policy": "fixed budget, one residual JTv plus global norms; timed terminal check",
+  "no_online_stop_claim": true,
+  "config": {
+    "checkpoint": "results\\ignn_arxiv_w32_e200_s1\\trained_model.pt",
+    "data_root": "data/ogb",
+    "out": "results\\ignn_postcheck_e200_s1",
+    "device": "cpu",
+    "smoke": false,
+    "trust_ogb_cache": true,
+    "sparse_format": "csr",
+    "eval_forward_tol": 2e-07,
+    "max_forward": 700,
+    "reference_tol": 2e-08,
+    "max_reference": 2500,
+    "budgets": "20,30,40,50,60,70,80,90,100,110,120",
+    "gmres_restart": 15,
+    "certified_tol": 1e-05,
+    "seed": 1,
+    "width": 32,
+    "rho": 0.95
+  }
+}

@@ -34,7 +34,7 @@ def main():
             int((cheb.Chebyshev == cheb.CAT).sum()),
             int((cheb.Chebyshev > cheb.CAT).sum())) == (164, 42, 34)
     ignn = pd.read_csv(P / "ignn_certification_summary.csv").set_index("method")
-    for method, actions in (("AR",81),("CAT",51),("Chebyshev",51),("GMRES",31)):
+    for method, actions in (("AR",101),("CAT",51),("Chebyshev",51),("GMRES",31)):
         assert int(ignn.loc[method,"median_charged_actions"]) == actions, method
     den = pd.read_csv(P / "spatial_first_certified_by_seed.csv")
     archived = pd.concat([
@@ -86,7 +86,7 @@ def main():
     assert (fine.first_certified_charged_actions == fine.first_certified_iteration + 1).all()
     assert (fine.certified_relative_adjoint_bound < 1e-5).all()
     for app, expected in {
-        "graph": {"AR": [76, 73, 75], "CAT": [46, 46, 46], "Chebyshev": [48, 48, 48]},
+        "graph": {"AR": [100, 104, 99], "CAT": [44, 44, 44], "Chebyshev": [46, 46, 46]},
         "spatial_retrained": {"AR": [147, 156, 122], "CAT": [42, 41, 43], "Chebyshev": [44, 43, 45]},
     }.items():
         q = fine[fine.application == app].pivot(index="seed", columns="method", values="first_certified_charged_actions")

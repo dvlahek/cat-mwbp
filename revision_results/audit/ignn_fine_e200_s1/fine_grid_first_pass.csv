@@ -1,0 +1,4 @@
+seed,method,first_certified_iteration,first_certified_charged_actions,certified_relative_adjoint_bound,offline_relative_adjoint_error,offline_relative_gradient_error
+1,AR,103,104,9.594214505511073e-06,6.019116601468749e-06,6.930341438278993e-06
+1,CAT,43,44,8.546873440543073e-06,7.097284605580172e-07,6.866760989291706e-07
+1,Chebyshev,45,46,7.761566055188768e-06,6.984160056787725e-07,6.84913875182414e-07

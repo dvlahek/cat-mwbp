@@ -1,12 +1,12 @@
 {
-  "checkpoint_sha256": "98969d564cf82b094f0ca7517c54ddbc067ed4cf5686f7a21e6a84c584437a3a",
+  "checkpoint_sha256": "8e9c939fdd90edcdd9df8694b067a81ab273ce840ff131c896abfa83e6f52bd9",
   "method": "per-iteration offline diagnostic on frozen checkpoint",
   "measure": "first relative-adjoint certificate with one conceptual terminal JTv",
   "not_claimed": "continuously monitored online stopping or hardware speedup",
   "source_metadata": {
     "kind": "graph",
     "dataset": "ogbn-arxiv",
-    "seed": 1,
+    "seed": 0,
     "width": 32,
     "rho": 0.95,
     "graph_meta": {
@@ -19,21 +19,24 @@
       "n_test": 48603
     },
     "scores": {
-      "train": 0.533730685710907,
-      "valid": 0.5472331047058105,
-      "test": 0.5261403322219849
+      "train": 0.6921300888061523,
+      "valid": 0.6762642860412598,
+      "test": 0.6611114740371704
     },
-    "forward_iterations": 44,
-    "reference_iterations": 133,
-    "reference_bound": 1.8299521962340192e-08
+    "forward_iterations": 73,
+    "reference_iterations": 172,
+    "reference_bound": 1.8883352441125204e-08
   },
-  "old_grid_validation": null,
+  "old_grid_validation": {
+    "original_grid_rows_checked": 33,
+    "all_pass_flags_match": true
+  },
   "configuration": {
     "kind": "graph",
-    "checkpoint": "results\\ignn_arxiv_w32_e20_s1\\trained_model.pt",
-    "out": "results\\ignn_fine_e20_s1",
-    "old_grid": null,
-    "max_budget": 100,
+    "checkpoint": "results\\ignn_arxiv_w32_e200_s0\\trained_model.pt",
+    "out": "results\\ignn_fine_e200_s0",
+    "old_grid": "results\\ignn_postcheck_e200_s0\\solver_budgets_charged.csv",
+    "max_budget": 120,
     "certified_tol": 1e-05,
     "device": "cpu",
     "data_root": "data/ogb",
@@ -47,7 +50,7 @@
     "sigma": 0.12,
     "threads": 2,
     "selftest": false,
-    "seed": 1,
+    "seed": 0,
     "width": 32,
     "rho": 0.95,
     "smoke": false

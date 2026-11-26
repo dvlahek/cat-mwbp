@@ -1,9 +1,7 @@
 {
   "description": "Numerical reference tables for Local Second-Order Adjoint Dynamics for Implicit Neural Networks.",
   "source_archives_sha256": {
-    "allresults.zip": "d8879eb8a27c9afa7058dccb1e4ae238f92faa21ec6f5f589315a5dc7943fe72",
-    "ignn_postcheck_all.zip": "bcc52ae13c7ae85175de843a2e097027731eb803bcbe37322282fdae1e469066",
-    "ignn_three_seeds.zip": "731a771687c7371f6dd3645543bbb0196a3813012d1fb3313e5510f56cffcac6"
+    "allresults.zip": "d8879eb8a27c9afa7058dccb1e4ae238f92faa21ec6f5f589315a5dc7943fe72"
   },
   "compact_results": {
     "chebyshev_corrected_pairs.csv": {
@@ -15,16 +13,16 @@
       "bytes": 2748
     },
     "ignn_certification_summary.csv": {
-      "sha256": "111720399eb8f496ab4b610989e8a02137b2ee2640d9cc5084dd145358f8811f",
-      "bytes": 542
+      "sha256": "d3776f20e825483208b4b7635cade4f80b0685c80be20202da3f2b9f2549a361",
+      "bytes": 704
     },
     "ignn_first_certified_by_seed.csv": {
-      "sha256": "4589045f524199eb13b55d160cbe6e632498327c08cdee75b031aa67d5a7097a",
-      "bytes": 1423
+      "sha256": "f79f1a784e343cc0bdab28d17cf370f5dbe50e11487a39823d4e39f972aeebf8",
+      "bytes": 1845
     },
     "ignn_paired_time_ratios.csv": {
-      "sha256": "77bf1def1706ee44b75442dea116f02d9294d32307b5da519437e88d90e329af",
-      "bytes": 350
+      "sha256": "4398880802f6cbc9f24786683cb41e78ae2a632e53d17dab288c41f4c3a2a062",
+      "bytes": 485
     },
     "spatial_certified_solver_summary.csv": {
       "sha256": "a9a79cfe7e8a60ea4732493b7e988e827b0d7676af4dd0fca1daa33a16bc4bac",
@@ -41,8 +39,13 @@
     "spatial_paired_speedups.csv": {
       "sha256": "ac3e10294b00e9e516319ccc34da0956719399cc6fdff82d13841216a2aea41a",
       "bytes": 129
+    },
+    "ignn_model_accuracy.csv": {
+      "sha256": "0b09ef30e1a4e0afa64203589070f1cabd1a5009d610f7b1b6d01af9725d0c63",
+      "bytes": 336
     }
   },
   "accuracy_note": "Fixed-budget certification includes one terminal Jacobian-transpose action and norm reductions. CPU timings are hardware-dependent.",
-  "spatial_source": "audit/spatial_reproduced_s0 through s2; source file hashes in AUDIT_SHA256.json"
+  "spatial_source": "audit/spatial_reproduced_s0 through s2; source file hashes in AUDIT_SHA256.json",
+  "graph_source": "audit/ignn_arxiv_w32_e200_s0 through s2; corresponding postcheck and fine-grid directories"
 }

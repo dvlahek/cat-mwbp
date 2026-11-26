@@ -79,11 +79,11 @@ python experiments/make_cat_tolerance_figure.py --input results/tolerance/tolera
 
 ### Graph classification
 
-The official [OGB](https://ogb.stanford.edu/) dataset and temporal split are used. Run the following for each seed (0, 1, 2), changing the seed and output paths accordingly.
+The official [OGB](https://ogb.stanford.edu/) dataset and temporal split are used. The 5,448-parameter graph model achieves 66.16% mean test accuracy over three seeds, compared with 55.50% for the published feature-only MLP baseline (110,120 parameters). All solvers are evaluated on identical frozen checkpoints within each seed. Run the following for each seed (0, 1, 2), changing the seed and output paths accordingly.
 
 ```bash
-python experiments/run_ignn_ogbn_arxiv.py --device cpu --epochs 20 --width 32 --rho 0.95 --seed 0 --data-root data/ogb --out results/ignn_s0
-python experiments/run_ignn_postcheck.py --checkpoint results/ignn_s0/trained_model.pt --data-root data/ogb --device cpu --out results/ignn_postcheck_s0
+python experiments/run_ignn_ogbn_arxiv.py --device cpu --epochs 200 --width 32 --rho 0.95 --seed 0 --data-root data/ogb --out results/ignn_s0
+python experiments/run_ignn_postcheck.py --checkpoint results/ignn_s0/trained_model.pt --data-root data/ogb --device cpu --budgets 20,30,40,50,60,70,80,90,100,110,120 --out results/ignn_postcheck_s0
 ```
 
 The option `--trust-ogb-cache` is available for locally verified OGB cache files that require the legacy PyTorch loading behaviour.
@@ -101,7 +101,7 @@ See [per-iteration certification](experiments/README_fine_budget.md) for the off
 
 ## Reproducibility
 
-The repository contains compact numerical tables, 2,700 per-iteration audit records, manifests and three independently retrained spatial checkpoints. All reported spatial comparisons use the three archived, independently retrained checkpoints. The earlier spatial checkpoints and the original graph and vision binaries are not included. Public datasets are obtained separately.
+The repository contains compact numerical tables, 2,880 per-iteration audit records, manifests and three graph and three spatial checkpoints. All reported spatial comparisons use the three archived, independently retrained checkpoints. The vision checkpoint binaries are not included. Public datasets are obtained separately.
 
 Figure 4 and Table S6 use predefined iteration budgets with one charged terminal residual evaluation. The spatial summary tables and per-iteration audits refer to the same archived models. The offline per-iteration audits report the first passing iteration plus one equivalent terminal action; they do not measure continuously monitored stopping costs. Individual width-training solve convergence flags were not retained. CPU timings depend on hardware and software versions.
 
