@@ -22,7 +22,7 @@ python -m pip install ogb scikit-image pillow
 python -m pip install threadpoolctl psutil
 ```
 
-Install PyTorch for the target device using the [official installation instructions](https://pytorch.org/get-started/locally/). The spatial replication used PyTorch 2.9.1+cpu and scikit-image 0.26.0. Package versions, model configurations and checkpoint hashes are recorded in the archived manifests. The base requirements describe the original NumPy-based environment.
+Install PyTorch for the target device using the [official installation instructions](https://pytorch.org/get-started/locally/). The spatial experiment used PyTorch 2.9.1+cpu and scikit-image 0.26.0. Package versions, model configurations and checkpoint hashes are recorded in the archived manifests. The base requirements specify the NumPy-based experiment environment.
 
 ## Results
 
@@ -33,7 +33,7 @@ Install PyTorch for the target device using the [official installation instructi
 | Table 4, Figure 2 | [Classification](reference_results/implicit/core_dataset_summary.csv), [spectral prediction](reference_results/implicit/theory_vs_measured_summary.csv) |
 | Table 5 | [Trainable recurrent models](reference_results/implicit/trainable_recurrent_summary.csv) |
 | Figure 3, Figure S3 | [Width-scaling pairs](revision_results/width_pairs.csv) |
-| Figure 4, Table S6 | [Graph](revision_results/ignn_first_certified_by_seed.csv), [spatial](revision_results/spatial_first_certified_by_seed.csv) |
+| Section 6.4, Figure 4, Table S6 | [Graph accuracy](revision_results/ignn_model_accuracy.csv), [graph solver results](revision_results/ignn_first_certified_by_seed.csv), [spatial solver results](revision_results/spatial_first_certified_by_seed.csv) |
 | Tables S1–S2 | [Directed spectra](reference_results/implicit/directed_spectrum_summary.csv), [ellipse calibration](reference_results/implicit/complex_spectrum_oracle_summary.csv) |
 | Table S3 | [Feed-forward comparisons](reference_results/aggregate_comparisons.csv) |
 | Table S4 | [Chebyshev pairs](revision_results/chebyshev_corrected_pairs.csv), [summary](revision_results/chebyshev_corrected_summary.csv) |
@@ -79,7 +79,7 @@ python experiments/make_cat_tolerance_figure.py --input results/tolerance/tolera
 
 ### Graph classification
 
-The official [OGB](https://ogb.stanford.edu/) dataset and temporal split are used. The 5,448-parameter graph model achieves 66.16% mean test accuracy over three seeds, compared with 55.50% for the published feature-only MLP baseline (110,120 parameters). All solvers are evaluated on identical frozen checkpoints within each seed. Run the following for each seed (0, 1, 2), changing the seed and output paths accordingly.
+The official [OGB](https://ogb.stanford.edu/) dataset and temporal split are used. The 5,448-parameter graph model achieves 66.16% mean test accuracy over three seeds. The [published OGB baselines](https://ogb.stanford.edu/docs/leader_nodeprop/) report 55.50% for MLP and 71.74% for GCN (110,120 parameters each). These values contextualize prediction, not backward-solver performance. All solvers are evaluated on identical frozen checkpoints within each seed. Run the following for each seed (0, 1, 2), changing the seed and output paths accordingly.
 
 ```bash
 python experiments/run_ignn_ogbn_arxiv.py --device cpu --epochs 200 --width 32 --rho 0.95 --seed 0 --data-root data/ogb --out results/ignn_s0
@@ -97,13 +97,13 @@ python experiments/run_spatial_implicit_denoising.py --seed 0 --steps 300 --side
 python experiments/summarize_spatial_denoising.py --root results --prefix spatial_denoising_s --out results/spatial_denoising_summary
 ```
 
-See [per-iteration certification](experiments/README_fine_budget.md) for the offline audits, including commands using the three archived spatial checkpoints. Additional details: [solver configurations](revision_results/README_anderson_v2.md) and [vision adjoints](revision_results/README_vision_chebyshev.md).
+See [per-iteration certification](experiments/README_fine_budget.md) for audit commands using the archived graph and spatial checkpoints. Additional details: [solver configurations](revision_results/README_anderson_v2.md) and [vision adjoints](revision_results/README_vision_chebyshev.md).
 
 ## Reproducibility
 
-The repository contains compact numerical tables, 2,880 per-iteration audit records, manifests and three graph and three spatial checkpoints. All reported spatial comparisons use the three archived, independently retrained checkpoints. The vision checkpoint binaries are not included. Public datasets are obtained separately.
+The repository contains compact numerical tables, 2,880 per-iteration audit records, manifests and three graph and three spatial checkpoints. All reported application comparisons use the archived checkpoints. The vision checkpoint binaries are not included. Public datasets are obtained separately.
 
-Figure 4 and Table S6 use predefined iteration budgets with one charged terminal residual evaluation. The spatial summary tables and per-iteration audits refer to the same archived models. The offline per-iteration audits report the first passing iteration plus one equivalent terminal action; they do not measure continuously monitored stopping costs. Individual width-training solve convergence flags were not retained. CPU timings depend on hardware and software versions.
+Figure 4 and Table S6 use predefined iteration budgets with one charged terminal residual evaluation. The budget-grid and per-iteration audits use the same checkpoints. The offline per-iteration audits report the first passing iteration plus one equivalent terminal action; they do not measure continuously monitored stopping costs. Individual width-training solve convergence flags were not retained. CPU timings are elapsed wall-clock measurements on the CPU and depend on hardware and software versions.
 
 ## Citation and license
 
