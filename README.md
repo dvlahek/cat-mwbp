@@ -1,5 +1,7 @@
 # Causal Adjoint Transport (CAT)
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24552794.svg)](https://doi.org/10.5281/zenodo.24552794)
+
 Research code and numerical results for *Local Second-Order Adjoint Dynamics for Implicit Neural Networks*.
 
 CAT applies a fixed-coefficient second-degree stationary iteration to the implicit adjoint system `(I - J^T) lambda = b`. Each step uses one Jacobian-transpose action and two local adjoint states. The experiments examine convergence and backward-solver costs in structured implicit networks.
@@ -106,5 +108,7 @@ The repository contains compact numerical tables, 2,880 per-iteration audit reco
 Figure 4 and Table S6 use predefined iteration budgets with one charged terminal residual evaluation. The budget-grid and per-iteration audits use the same checkpoints. The offline per-iteration audits report the first passing iteration plus one equivalent terminal action; they do not measure continuously monitored stopping costs. Individual width-training solve convergence flags were not retained. CPU timings are elapsed wall-clock measurements on the CPU and depend on hardware and software versions.
 
 ## Citation and license
+
+Version 1.1.0 is archived on Zenodo: [10.5281/zenodo.24552794](https://doi.org/10.5281/zenodo.24552794).
 
 See [CITATION.cff](CITATION.cff), [VERSION](VERSION) and [LICENSE](LICENSE) (MIT).
